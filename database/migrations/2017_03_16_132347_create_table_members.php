@@ -17,7 +17,7 @@ class CreateTableMembers extends Migration
             $table->increments('id');
             $table->integer('id_member');
             $table->integer('weight')->nullable();
-            $table->integer('id_group')->references('id_group')->on('members')->onDelete('cascade');
+            $table->integer('id_group')->references('id_group')->on('groups')->onDelete('cascade');
         });
     }
 

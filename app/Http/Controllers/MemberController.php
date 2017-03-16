@@ -24,12 +24,12 @@ class MemberController extends Controller
                 'offset' => $i * 1000,
                 'group_id' => 35294456,
                 'count' => 1000
-            ]]);
+            ], 'verify' => false]);
             $VKResponse1000 = (string) $res->getBody();
             $VKResponse1000 = json_decode($VKResponse1000);
-            foreach ($VKResponse1000->response->items as $member) {
+            foreach ($VKResponse1000->response->users as $member) {
+                //dd($member);
                 Member::create(['id_member' => $member, 'id_group' => 35294456]);
-              
             }
         }
       return view('welcome');
