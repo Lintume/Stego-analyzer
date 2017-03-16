@@ -63,7 +63,6 @@ class parseGroup extends Command
                 Member::firstOrCreate(['id_member' => $member, 'id_group' => '120416132']);
                 $bar->advance();
             }
-            //usleep(1000000/5);
         }
         $bar->finish();
         $this->info(sprintf('Members add successfully'));
@@ -93,7 +92,7 @@ class parseGroup extends Command
             }
             $countLoops = intdiv($VKResponse->response->count, 1000);
             $countWeight = 0;
-            sleep(0.5);
+            sleep(1);
             for($i = 0; $i < $countLoops; $i++) {
                 $friendsRes = $client->request('GET', 'https://api.vk.com/method/friends.get', ['query' => [
                     'v' => '5.9',
@@ -117,7 +116,7 @@ class parseGroup extends Command
                         }
                     }
                 }
-                sleep(0.5);
+                sleep(1);
             }
             $mem->update(['weight' => $countWeight]);
         }
