@@ -4,13 +4,13 @@
 
 Algorithmic search employees from leaders of social groups.
 
-##System Requirements
+## System Requirements
 
 The Laravel framework has a few system requirements. However, if you are not using Homestead, you will need to make sure your server meets the following requirements:
 
 PHP >= 5.6.4 OpenSSL PHP Extension PDO PHP Extension Mbstring PHP Extension Tokenizer PHP Extension XML PHP Extension
 
-##Installation
+## Installation
 
 Please check the system requirements before installing project
 
@@ -25,5 +25,5 @@ For development, you can simply run
 `php artisan serve`
 
 ***Test data For the filling data base test data (vocabulary) you can run the command
-` php artisan db:seed`
+ ` php artisan db:seed`
 
