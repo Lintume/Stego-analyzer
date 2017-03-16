@@ -77,7 +77,7 @@ class parseGroup extends Command
                 'v' => '5.9',
                 'user_id' => $mem->id_member,
                 'count' => 1,
-                'access_token' => '5fca21a64b3df03a29854990508a475b2a18caf1e8fa611df8fdeb657b080f0ebf14282bb5f17ed5b98a3'
+                'access_token' => '7dcfae685e42216f4b745d48b43624ecf0dc1c9fb4cc7a64993516781a62b61f81bdcb77500384cdd145c'
             ], 'verify' => false]);
             $VKResponse = (string) $res->getBody();
             $VKResponse = json_decode($VKResponse);
@@ -99,7 +99,7 @@ class parseGroup extends Command
                     'user_id' => $mem->id_member,
                     'offset' => $i * 1000,
                     'count' => 1000,
-                    'access_token' => '5fca21a64b3df03a29854990508a475b2a18caf1e8fa611df8fdeb657b080f0ebf14282bb5f17ed5b98a3'
+                    'access_token' => '7dcfae685e42216f4b745d48b43624ecf0dc1c9fb4cc7a64993516781a62b61f81bdcb77500384cdd145c'
                 ], 'verify' => false]);
                 $VKResponse = (string)$friendsRes->getBody();
                 $VKResponse = json_decode($VKResponse);
