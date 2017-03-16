@@ -41,37 +41,39 @@ class parseGroup extends Command
     public function handle()
     {
         $client = new Client();
-        $res = $client->request('GET', 'http://api.vk.com/method/groups.getMembers', ['query' =>[
-            'v' => '5.9',
-            'group_id' => 120416132,
-            'count' => 1
-        ], 'verify' => false]);
-        $VKResponse = (string) $res->getBody();
-        $VKResponse = json_decode($VKResponse);
-        $count = intdiv($VKResponse->response->count, 1000);
-        $bar = $this->output->createProgressBar($VKResponse->response->count);
-        for($i = 0; $i < $count; $i++) {
-            $res = $client->request('GET', 'http://api.vk.com/method/groups.getMembers', ['query' =>[
-                'v' => '5.5',
-                'offset' => $i * 1000,
-                'group_id' => 35294456,
-                'count' => 1000
-            ], 'verify' => false]);
-            $VKResponse1000 = (string) $res->getBody();
-            $VKResponse1000 = json_decode($VKResponse1000);
-            foreach ($VKResponse1000->response->users as $member) {
-                Member::firstOrCreate(['id_member' => $member, 'id_group' => '120416132']);
-                $bar->advance();
-            }
-            //usleep(1000000/5);
-        }
-        $bar->finish();
-        $this->info(sprintf('Members add successfully'));
+//        $res = $client->request('GET', 'http://api.vk.com/method/groups.getMembers', ['query' =>[
+//            'v' => '5.9',
+//            'group_id' => 120416132,
+//            'count' => 1
+//        ], 'verify' => false]);
+//        $VKResponse = (string) $res->getBody();
+//        $VKResponse = json_decode($VKResponse);
+//        $count = intdiv($VKResponse->response->count, 1000);
+//        $bar = $this->output->createProgressBar($VKResponse->response->count);
+//        for($i = 0; $i < $count; $i++) {
+//            $res = $client->request('GET', 'http://api.vk.com/method/groups.getMembers', ['query' =>[
+//                'v' => '5.5',
+//                'offset' => $i * 1000,
+//                'group_id' => 35294456,
+//                'count' => 1000
+//            ], 'verify' => false]);
+//            $VKResponse1000 = (string) $res->getBody();
+//            $VKResponse1000 = json_decode($VKResponse1000);
+//            foreach ($VKResponse1000->response->users as $member) {
+//                Member::firstOrCreate(['id_member' => $member, 'id_group' => '120416132']);
+//                $bar->advance();
+//            }
+//            //usleep(1000000/5);
+//        }
+//        $bar->finish();
+//        $this->info(sprintf('Members add successfully'));
 
         $this->info(sprintf('Start searching leaders...'));
         $membersParsed = Member::where('id_group', 120416132)->get();
+        $bar = $this->output->createProgressBar($membersParsed->count());
         foreach ($membersParsed as $mem) {
-            $res = $client->request('GET', 'https://api.vk.com/method/friend.get', ['query' => [
+            $bar->advance();
+            $res = $client->request('GET', 'https://api.vk.com/method/users.getFollowers', ['query' => [
                 'v' => '5.9',
                 'user_id' => $mem->id_member,
                 'count' => 1,
@@ -88,11 +90,10 @@ class parseGroup extends Command
                 }
                 continue;
             }
-            usleep(1000000/3);
             $countLoops = intdiv($VKResponse->response->count, 1000);
             $countWeight = 0;
             for($i = 0; $i < $countLoops; $i++) {
-                $friendsRes = $client->request('GET', 'https://api.vk.com/method/friend.get', ['query' => [
+                $friendsRes = $client->request('GET', 'https://api.vk.com/method/users.getFollowers', ['query' => [
                     'v' => '5.9',
                     'user_id' => $mem->id_member,
                     'offset' => $i * 1000,
@@ -108,14 +109,18 @@ class parseGroup extends Command
                 }
                // dd($VKResponse);
                 foreach ($VKResponse->response->items as $friend) {
-                    if ($mem->id_member == $friend) {
-                        $countWeight++;
+                    foreach ($membersParsed as $item) {
+                        if ($item->id_member == $friend) {
+                            $countWeight++;
+                        }
                     }
                 }
-                usleep(1000000/3);
+                sleep(0.5);
             }
             $mem->update(['weight' => $countWeight]);
+            sleep(0.5);
         }
+        $bar->finish();
         $this->info(sprintf('Leaders find!'));
     }
 }
