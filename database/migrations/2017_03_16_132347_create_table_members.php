@@ -18,6 +18,8 @@ class CreateTableMembers extends Migration
             $table->integer('id_member');
             $table->integer('weight')->nullable();
             $table->integer('id_group')->references('id_group')->on('groups')->onDelete('cascade');
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
         });
     }
 

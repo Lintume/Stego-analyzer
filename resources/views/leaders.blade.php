@@ -6,7 +6,7 @@
         var members = {!! $members->toJson() !!};
         var parseMembers = [];
         members.forEach(function (item) {
-            parseMembers.push([''+item.id_member, item.weight])
+            parseMembers.push([item.first_name+' '+item.last_name + ' (' + item.id_member + ')', item.weight])
         });
         // Load the Visualization API and the corechart package.
         google.charts.load('current', {'packages':['corechart']});
@@ -21,18 +21,18 @@
 
             // Create the data table.
             var data = new google.visualization.DataTable();
-            data.addColumn('string', 'Topping');
-            data.addColumn('number', 'Slices');
+            data.addColumn('string', 'Name');
+            data.addColumn('number', 'Parts');
 
             data.addRows(parseMembers);
 
             // Set chart options
             var options = {'title':'Leaders on ids',
-                'width':2000,
+                'width':1300,
                 'height':1000};
 
             // Instantiate and draw our chart, passing in some options.
-            var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+            var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
             chart.draw(data, options);
         }
     </script>

@@ -54,13 +54,14 @@ class parseGroup extends Command
             $res = $client->request('GET', 'http://api.vk.com/method/groups.getMembers', ['query' =>[
                 'v' => '5.5',
                 'offset' => $i * 1000,
-                'group_id' => 35294456,
-                'count' => 1000
+                'group_id' => 120416132,
+                'count' => 1000,
+                'fields' => 'name'
             ], 'verify' => false]);
             $VKResponse1000 = (string) $res->getBody();
             $VKResponse1000 = json_decode($VKResponse1000);
             foreach ($VKResponse1000->response->users as $member) {
-                Member::firstOrCreate(['id_member' => $member, 'id_group' => '120416132']);
+                Member::firstOrCreate(['id_member' => $member->id, 'first_name'=>$member->first_name, 'last_name' => $member->last_name, 'id_group' => '120416132']);
                 $bar->advance();
             }
         }
