@@ -63,6 +63,7 @@ class parseGroup extends Command
                 Member::firstOrCreate(['id_member' => $member, 'id_group' => '120416132']);
                 $bar->advance();
             }
+            //usleep(1000000/5);
         }
         $bar->finish();
         $this->info(sprintf('Members add successfully'));
@@ -70,36 +71,51 @@ class parseGroup extends Command
         $this->info(sprintf('Start searching leaders...'));
         $membersParsed = Member::where('id_group', 120416132)->get();
         foreach ($membersParsed as $mem) {
-            $res = $client->request('GET', 'http://api.vk.com/method/groups.getMembers', ['query' =>[
-            'v' => '5.9',
-            'group_id' => 120416132,
-            'count' => 1
+            $res = $client->request('GET', 'https://api.vk.com/method/friend.get', ['query' => [
+                'v' => '5.9',
+                'user_id' => $mem->id_member,
+                'count' => 1,
+                'access_token' => '5fca21a64b3df03a29854990508a475b2a18caf1e8fa611df8fdeb657b080f0ebf14282bb5f17ed5b98a3'
             ], 'verify' => false]);
             $VKResponse = (string) $res->getBody();
             $VKResponse = json_decode($VKResponse);
+            if(isset($VKResponse->error))
+            {
+                $this->info('ID first: '. $mem->id_member .' '. $VKResponse->error->error_msg);
+                if($VKResponse->error->error_code == 18)
+                {
+                    $mem->delete();
+                }
+                continue;
+            }
+            usleep(1000000/3);
             $countLoops = intdiv($VKResponse->response->count, 1000);
-            $bar = $this->output->createProgressBar($VKResponse->response->count);
+            $countWeight = 0;
             for($i = 0; $i < $countLoops; $i++) {
-
-                $countWeight = 0;
-                $friendsRes = $client->request('GET', 'http://api.vk.com/method/friend.get', ['query' => [
+                $friendsRes = $client->request('GET', 'https://api.vk.com/method/friend.get', ['query' => [
                     'v' => '5.9',
                     'user_id' => $mem->id_member,
                     'offset' => $i * 1000,
-                    'count' => 1000
+                    'count' => 1000,
+                    'access_token' => '5fca21a64b3df03a29854990508a475b2a18caf1e8fa611df8fdeb657b080f0ebf14282bb5f17ed5b98a3'
                 ], 'verify' => false]);
                 $VKResponse = (string)$friendsRes->getBody();
                 $VKResponse = json_decode($VKResponse);
+                if(isset($VKResponse->error))
+                {
+                    $this->info('ID second: '. $mem->id_member .' '. $VKResponse->error->error_msg);
+                    continue;
+                }
+               // dd($VKResponse);
                 foreach ($VKResponse->response->items as $friend) {
-                    if ($mem->id_member == $friend->id) {
+                    if ($mem->id_member == $friend) {
                         $countWeight++;
                     }
-                    $bar->advance();
                 }
-                $mem->update(['weight' => $countWeight]);
+                usleep(1000000/3);
             }
+            $mem->update(['weight' => $countWeight]);
         }
-        $bar->finish();
         $this->info(sprintf('Leaders find!'));
     }
 }
