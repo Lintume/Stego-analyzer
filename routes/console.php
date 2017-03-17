@@ -129,12 +129,21 @@ Artisan::command('social:table', function () {
             $data->push($row);
         }
     }
+
+    $pony_data = $data->filter(function ($data) {
+        return $data['user_id'] == 101942629 || $data['user_id'] == 35218464;
+    });
+
     $data = $data->filter(function ($data) {
         return $data['weight'] > 0;
     });
     $data = $data->sortByDesc('weight');
 
+
+
 //    $data = $data->take(10);
     $this->table($headers, $data);
+
+    $this->table($headers, $pony_data);
 })->describe('Print leaders');
 
