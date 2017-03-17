@@ -38,7 +38,7 @@ return [
     |
     */
 
-    'debug' => env('APP_DEBUG', false),
+    'debug' => (isset($_SERVER['HTTP_X_REAL_IP']) && $_SERVER['HTTP_X_REAL_IP'] == env('APP_DEBUG_IP', false)) ? true : env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
