@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return '<a href="https://oauth.vk.com/authorize?client_id=5929085&redirect_uri=http://api.vk.com/blank.html&display=page&response_type=token">Push the button</a>';
+    return '<a href="https://oauth.vk.com/authorize?client_id=4506839&scope=status,friends&redirect_uri=http://api.vk.com/blank.html&display=page&response_type=token">Push the button</a>';
 });
 
 Route::get('/leaders', ['as' => 'leaders', 'uses' => 'MemberController@show']);
@@ -20,7 +20,7 @@ Route::get('/leaders', ['as' => 'leaders', 'uses' => 'MemberController@show']);
 
     Route::get('vk', function () {
         $client_id = '5922811';
-        $scope = 'groups, manage';
+        $scope = 'status';
         $group_ids = '48715015';
         echo "<a href=\"https://oauth.vk.com/authorize?client_id=$client_id&display=page&redirect_uri=http://mytattoo.sexy/oauth/vk/callback&scope=$scope&group_ids=$group_ids&response_type=code&v=5.62\">Push the button</a>";
     });
