@@ -129,7 +129,11 @@ Artisan::command('social:table', function () {
             $data->push($row);
         }
     }
-    $data->sortByDesc('sortByDesc');
+    $data = $data->filter(function ($data) {
+        return $data['weight'] > 0;
+    });
+    $data = $data->sortByDesc('weight');
+
 //    $data = $data->take(10);
     $this->table($headers, $data);
 })->describe('Print leaders');
