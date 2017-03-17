@@ -73,51 +73,52 @@ class parseGroup extends Command
         $bar = $this->output->createProgressBar($membersParsed->count());
         foreach ($membersParsed as $mem) {
             $bar->advance();
-            if ($mem->id_member == 35218464) {
-                $res = $client->request('GET', 'https://api.vk.com/method/friends.get', ['query' => [
+            $res = $client->request('GET', 'https://api.vk.com/method/friends.get', ['query' => [
+                'v' => '5.9',
+                'user_id' => $mem->id_member,
+                'count' => 1,
+                'access_token' => env('ACCESS_TOKEN_PARI')
+            ], 'verify' => false]);
+            $VKResponse = (string) $res->getBody();
+            $VKResponse = json_decode($VKResponse);
+            if(property_exists($VKResponse, 'error'))
+            {
+                $this->info('ID first: '. $mem->id_member .' '. $VKResponse->error->error_msg);
+                if($VKResponse->error->error_code == 18)
+                {
+                    $mem->delete();
+                }
+                continue;
+            }
+            $countLoops = intdiv($VKResponse->response->count, 1000) + 1;
+            $countWeight = 0;
+            sleep(1);
+            for($i = 0; $i < $countLoops; $i++) {
+                $friendsRes = $client->request('GET', 'https://api.vk.com/method/friends.get', ['query' => [
                     'v' => '5.9',
                     'user_id' => $mem->id_member,
-                    'count' => 1,
+                    'offset' => $i * 1000,
+                    'count' => 1000,
                     'access_token' => env('ACCESS_TOKEN_PARI')
                 ], 'verify' => false]);
-                $VKResponse = (string)$res->getBody();
+                $VKResponse = (string)$friendsRes->getBody();
                 $VKResponse = json_decode($VKResponse);
-                if (property_exists($VKResponse, 'error')) {
-                    $this->info('ID first: ' . $mem->id_member . ' ' . $VKResponse->error->error_msg);
-                    if ($VKResponse->error->error_code == 18) {
-                        $mem->delete();
-                    }
+                if(property_exists($VKResponse, 'error'))
+                {
+                    $this->info('ID second: '. $mem->id_member .' '. $VKResponse->error->error_msg);
                     continue;
                 }
-                $countLoops = intdiv($VKResponse->response->count, 1000) + 1;
-                $countWeight = 0;
-                sleep(1);
-                for ($i = 0; $i < $countLoops; $i++) {
-                    $friendsRes = $client->request('GET', 'https://api.vk.com/method/friends.get', ['query' => [
-                        'v' => '5.9',
-                        'user_id' => $mem->id_member,
-                        'offset' => $i * 1000,
-                        'count' => 1000,
-                        'access_token' => env('ACCESS_TOKEN_PARI')
-                    ], 'verify' => false]);
-                    $VKResponse = (string)$friendsRes->getBody();
-                    $VKResponse = json_decode($VKResponse);
-                    if (property_exists($VKResponse, 'error')) {
-                        $this->info('ID second: ' . $mem->id_member . ' ' . $VKResponse->error->error_msg);
-                        continue;
-                    }
-                    // dd($VKResponse);
-                    foreach ($VKResponse->response->items as $friend) {
-                        foreach ($membersParsed as $item) {
-                            if ($item->id_member == $friend) {
-                                $countWeight++;
-                            }
+               // dd($VKResponse);
+                foreach ($VKResponse->response->items as $friend) {
+                    foreach ($membersParsed as $item) {
+                        if ($item->id_member == $friend) {
+                            $countWeight++;
                         }
                     }
-                    sleep(1);
                 }
-                $mem->update(['weight' => $countWeight]);
+                sleep(1);
             }
+            $mem->update(['weight' => $countWeight]);
         }
         $bar->finish();
         $this->info(sprintf('Leaders find!'));
