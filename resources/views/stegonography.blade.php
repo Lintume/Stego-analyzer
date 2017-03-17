@@ -19,7 +19,7 @@
             vAxis: {minValue: 0.999999, maxValue: 1}
         };
 
-        var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+        var chart = new google.visualization.AreaChart(document.getElementById('chart_divIf'));
         chart.draw(data, options);
     }
 </script>
@@ -66,7 +66,7 @@
         <div class="tab-content">
             <div id="IF" class="tab-pane fade in active">
                 <h3>IF</h3>
-                <div id="chart_div" style="width: 100%"></div>
+                <div id="chart_divIf" style="width: 100%"></div>
             </div>
             <div id="SNR" class="tab-pane fade">
                 <h3>SNR</h3>

@@ -12,6 +12,10 @@
 */
 
 Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/vkauthorize', function () {
     return '<a href="https://oauth.vk.com/authorize?client_id=4506839&scope=status,friends&redirect_uri=http://api.vk.com/blank.html&display=page&response_type=token">Push the button</a>';
 });
 
