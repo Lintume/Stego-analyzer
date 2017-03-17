@@ -4,15 +4,29 @@
     google.charts.load('current', {'packages':['corechart']});
     google.charts.setOnLoadCallback(drawChart);
 
+    var cryptoData = {!! \GuzzleHttp\json_encode($crypto) !!};
+
+    var LSB = [];
+    LSB.IF = [];
+    for(var key in cryptoData.LSB.IF)
+    {
+        LSB.IF.push([Number(key), cryptoData.LSB.IF[key]])
+    }
+
+    LSB.SNR = [];
+    for(var key in cryptoData.LSB.SNR)
+    {
+        LSB.SNR.push([Number(key), cryptoData.LSB.SNR[key]])
+    }
+
+    LSB.CQ = [];
+    for(var key in cryptoData.LSB.CQ)
+    {
+        LSB.CQ.push([Number(key), cryptoData.LSB.CQ[key]])
+    }
+
     function drawChart() {
-        var data = {!! \GuzzleHttp\json_encode($IF) !!};
-        var dataChart = [];
-        //dataChart.push(['bits in encrypted file', 'IF']);
-        for(var key in data)
-        {
-            dataChart.push([Number(key), data[key]])
-        }
-        var data = google.visualization.arrayToDataTable(dataChart, true);
+        var data = google.visualization.arrayToDataTable(LSB.IF, true);
         var options = {
             title: 'IF',
             hAxis: {title: 'Bits',  titleTextStyle: {color: '#333'}},
@@ -21,6 +35,31 @@
 
         var chart = new google.visualization.AreaChart(document.getElementById('chart_divIf'));
         chart.draw(data, options);
+
+
+        var data_snr = google.visualization.arrayToDataTable(LSB.SNR, true);
+        var options_snr = {
+            title: 'SNR',
+            hAxis: {title: 'Bits',  titleTextStyle: {color: '#333'}},
+            vAxis: {minValue: 600000, maxValue: 10000000}
+        };
+
+        var chart_snr = new google.visualization.AreaChart(document.getElementById('chart_div_snr'));
+        $("a[href='#SNR']").on('shown.bs.tab', function (e) {
+            chart_snr.draw(data_snr, options_snr);
+        });
+
+        var data_cq = google.visualization.arrayToDataTable(LSB.CQ, true);
+        var options_cq = {
+            title: 'CQ',
+            hAxis: {title: 'Bits',  titleTextStyle: {color: '#333'}},
+            vAxis: {minValue: 7119810, maxValue: 7119850}
+        };
+
+        var chart_cq = new google.visualization.AreaChart(document.getElementById('chart_div_cq'));
+        $("a[href='#CQ']").on('shown.bs.tab', function (e) {
+            chart_cq.draw(data_cq, options_cq);
+        });
     }
 </script>
 
@@ -39,14 +78,14 @@
                 <td>
                     <img src="{{$originalSrc}}">
                 </td>
-                @foreach($crypto as $image)
+                @foreach($crypto['LSB']['images'] as $image)
                     <td>
                         <img src="{{$image}}">
                     </td>
                 @endforeach
             </tr>
             <tr>
-                @foreach($crypto as $image => $key)
+                @foreach($crypto['LSB']['images'] as $image => $key)
                     <td>
                         {{$key}}
                     </td>
@@ -70,11 +109,11 @@
             </div>
             <div id="SNR" class="tab-pane fade">
                 <h3>SNR</h3>
-                <p>Some content in menu 1.</p>
+                <div id="chart_div_snr" style="width: 100%"></div>
             </div>
             <div id="CQ" class="tab-pane fade">
                 <h3>CQ</h3>
-                <p>Some content in menu 2.</p>
+                <div id="chart_div_cq" style="width: 100%"></div>
             </div>
             <div id="AD" class="tab-pane fade">
                 <h3>AD</h3>
