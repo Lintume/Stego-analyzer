@@ -24,6 +24,4 @@ Finally, setup an Apache VirtualHost to point to the "public" folder.
 For development, you can simply run
 `php artisan serve`
 
-***Test data For the filling data base test data (vocabulary) you can run the command
- ` php artisan db:seed`
 

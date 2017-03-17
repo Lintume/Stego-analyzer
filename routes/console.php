@@ -31,7 +31,7 @@ Artisan::command('social:members', function () {
                     'group_id' => $group->social_id,
                     'count' => $count,
                     'offset' => $offset,
-                    'access_token'  => 'c45ce79383e38de2e35edc4155bf9e625fee01fe694bbb1361e7b3552539d0e4c1938a0c3f7e3275b4e23',
+                    'access_token'  => env('ACCESS_TOKEN_ZOGXRAY'),
                 ],
                 'verify' => false
             ])->getBody();
@@ -48,7 +48,7 @@ Artisan::command('social:members', function () {
                         'query' => [
                             'v' => '5.69',
                             'user_id' => $item,
-                            'access_token'  => 'c45ce79383e38de2e35edc4155bf9e625fee01fe694bbb1361e7b3552539d0e4c1938a0c3f7e3275b4e23',
+                            'access_token'  => env('ACCESS_TOKEN_ZOGXRAY'),
                         ],
                         'verify' => false
                     ])->getBody();
@@ -82,7 +82,7 @@ Artisan::command('social:relations', function () {
                     'v' => '5.69',
                     'user_id' => $user->social_id,
                     'order' => 'random',
-                    'access_token'  => 'c45ce79383e38de2e35edc4155bf9e625fee01fe694bbb1361e7b3552539d0e4c1938a0c3f7e3275b4e23',
+                    'access_token'  => env('ACCESS_TOKEN_ZOGXRAY'),
                 ],
                 'verify' => false
             ])->getBody();
@@ -97,7 +97,7 @@ Artisan::command('social:relations', function () {
                             'query' => [
                                 'v' => '5.69',
                                 'user_id' => $item,
-                                'access_token' => 'c45ce79383e38de2e35edc4155bf9e625fee01fe694bbb1361e7b3552539d0e4c1938a0c3f7e3275b4e23',
+                                'access_token' => env('ACCESS_TOKEN_ZOGXRAY'),
                             ],
                             'verify' => false
                         ])->getBody();
