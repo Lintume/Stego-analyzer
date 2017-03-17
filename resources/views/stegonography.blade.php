@@ -56,7 +56,35 @@
                 </td>
             </tr>
         </table>
-        <div id="chart_div" style="width: 100%"></div>
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#IF">IF</a></li>
+            <li><a data-toggle="tab" href="#SNR">SNR</a></li>
+            <li><a data-toggle="tab" href="#CQ">CQ</a></li>
+            <li><a data-toggle="tab" href="#AD">AD</a></li>
+            <li><a data-toggle="tab" href="#NAD">NAD</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="IF" class="tab-pane fade in active">
+                <h3>IF</h3>
+                <div id="chart_div" style="width: 100%"></div>
+            </div>
+            <div id="SNR" class="tab-pane fade">
+                <h3>SNR</h3>
+                <p>Some content in menu 1.</p>
+            </div>
+            <div id="CQ" class="tab-pane fade">
+                <h3>CQ</h3>
+                <p>Some content in menu 2.</p>
+            </div>
+            <div id="AD" class="tab-pane fade">
+                <h3>AD</h3>
+                <p>Some content in menu 2.</p>
+            </div>
+            <div id="NAD" class="tab-pane fade">
+                <h3>NAD</h3>
+                <p>Some content in menu 2.</p>
+            </div>
+        </div>
     </div>
     <div id="menu1" class="tab-pane fade">
         <h3>Блочное встраивание</h3>
