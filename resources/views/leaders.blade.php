@@ -1,6 +1,4 @@
-<html>
-<head>
-    <!--Load the AJAX API-->
+@extends('layouts.layout')
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
         var members = {!! $members->toJson() !!};
@@ -27,19 +25,16 @@
             data.addRows(parseMembers);
 
             // Set chart options
-            var options = {'title':'Leaders on ids',
+            var options = {
                 'width':1300,
-                'height':1000};
+                'height':600};
 
             // Instantiate and draw our chart, passing in some options.
             var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
             chart.draw(data, options);
         }
     </script>
-</head>
 
-<body>
+<h2>Leaders group <a class="btn btn-info" href="https://vk.com/programmerrepublic">Programmer Republic</a></h2>
 <!--Div that will hold the pie chart-->
 <div id="chart_div"></div>
-</body>
-</html>

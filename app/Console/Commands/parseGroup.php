@@ -72,7 +72,6 @@ class parseGroup extends Command
         $membersParsed = Member::where('id_group', 120416132)->get();
         $bar = $this->output->createProgressBar($membersParsed->count());
         foreach ($membersParsed as $mem) {
-            $this->info('.');
             $bar->advance();
             $res = $client->request('GET', 'https://api.vk.com/method/friends.get', ['query' => [
                 'v' => '5.9',
@@ -91,7 +90,7 @@ class parseGroup extends Command
                 }
                 continue;
             }
-            $countLoops = intdiv($VKResponse->response->count, 1000);
+            $countLoops = intdiv($VKResponse->response->count, 1000) + 1;
             $countWeight = 0;
             sleep(1);
             for($i = 0; $i < $countLoops; $i++) {
