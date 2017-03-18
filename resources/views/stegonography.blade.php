@@ -25,6 +25,18 @@
         LSB.CQ.push([Number(key), cryptoData.LSB.CQ[key]])
     }
 
+    LSB.AD = [];
+    for(var key in cryptoData.LSB.AD)
+    {
+        LSB.AD.push([Number(key), cryptoData.LSB.AD[key]])
+    }
+
+    LSB.NAD = [];
+    for(var key in cryptoData.LSB.NAD)
+    {
+        LSB.NAD.push([Number(key), cryptoData.LSB.NAD[key]])
+    }
+
     function drawChart() {
         var data = google.visualization.arrayToDataTable(LSB.IF, true);
         var options = {
@@ -41,7 +53,7 @@
         var options_snr = {
             title: 'SNR',
             hAxis: {title: 'Bits',  titleTextStyle: {color: '#333'}},
-            vAxis: {minValue: 600000, maxValue: 10000000}
+            vAxis: {minValue: 600000, maxValue: 1000000}
         };
 
         var chart_snr = new google.visualization.AreaChart(document.getElementById('chart_div_snr'));
@@ -59,6 +71,30 @@
         var chart_cq = new google.visualization.AreaChart(document.getElementById('chart_div_cq'));
         $("a[href='#CQ']").on('shown.bs.tab', function (e) {
             chart_cq.draw(data_cq, options_cq);
+        });
+
+        var data_ad = google.visualization.arrayToDataTable(LSB.AD, true);
+        var options_ad = {
+            title: 'AD',
+            hAxis: {title: 'Bits',  titleTextStyle: {color: '#333'}},
+            vAxis: {minValue: 400, maxValue: 700}
+        };
+
+        var chart_ad = new google.visualization.AreaChart(document.getElementById('chart_div_ad'));
+        $("a[href='#AD']").on('shown.bs.tab', function (e) {
+            chart_ad.draw(data_ad, options_ad);
+        });
+
+        var data_nad = google.visualization.arrayToDataTable(LSB.NAD, true);
+        var options_nad = {
+            title: 'NAD',
+            hAxis: {title: 'Bits',  titleTextStyle: {color: '#333'}},
+            vAxis: {minValue: 0.00001, maxValue: 0.0002}
+        };
+
+        var chart_nad = new google.visualization.AreaChart(document.getElementById('chart_div_nad'));
+        $("a[href='#NAD']").on('shown.bs.tab', function (e) {
+            chart_nad.draw(data_nad, options_nad);
         });
     }
 </script>
@@ -117,11 +153,11 @@
             </div>
             <div id="AD" class="tab-pane fade">
                 <h3>AD</h3>
-                <p>Some content in menu 2.</p>
+                <div id="chart_div_ad" style="width: 100%"></div>
             </div>
             <div id="NAD" class="tab-pane fade">
                 <h3>NAD</h3>
-                <p>Some content in menu 2.</p>
+                <div id="chart_div_nad" style="width: 100%"></div>
             </div>
         </div>
     </div>
