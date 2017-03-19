@@ -6,20 +6,20 @@ var Gallery = new Vue({
             original: "",
             containers: []
         },
-        picture: []
+        picture: {
+            base64Picture: "",
+            bytes: null
+        }
     },
     mounted: function () {
         this.copyPicture()
     },
     methods: {
         copyPicture: function () {
-            var copiedPicture = jQuery.extend(true, [], this.picture)
+            var copiedPicture = jQuery.extend(true, {}, this.picture)
             this.pictures.containers.push(copiedPicture);
         },
-        deleteGallery: function (index) {
-            this.galleries.splice(index, 1);
-        },
-        onImageChange: function (event, ig, ip) {
+        onImageChange: function (event, ip) {
             var files = event.target.files || event.dataTransfer.files;
             if (!files.length)
                 return;
@@ -29,35 +29,59 @@ var Gallery = new Vue({
                 isSuccess = fileTypes.indexOf(extension) > -1;  //is extension in acceptable types
 
             if (isSuccess) {
-                this.readFile(files[0], ig, ip);
-                this.autoSizePicture();
+                this.readFile(files[0], ip);
             }
             else {
-                bootbox.alert('It is not a picture. Please, use a picture')
+                alert('It is not a picture. Please, use a picture')
             }
             event.preventDefault()
         },
-        readFile: function (file, ig, ip) {
+        readFile: function (file, ip) {
             var self = this;
             var reader = new FileReader();
             reader.onloadend = function () {
-                self.$set('galleries[' + ig + '][\'pictures\'][' + ip + ']', reader.result);
-                console.log(typeof self.galleries[ig]['pictures'][ip]);
+                self.pictures.containers[ip].base64Picture = reader.result;
             };
             if (file) {
                 reader.readAsDataURL(file);
             }
-            console.log(this.galleries)
         },
-        autoSizePicture: function () {
-            setTimeout(function(){
-                $('.fitPicture').height($('.fitPicture').width())
-            }, 100);
+        onImageChangeOrig: function (event) {
+            var files = event.target.files || event.dataTransfer.files;
+            if (!files.length)
+                return;
+
+            var fileTypes = ['jpg', 'jpeg', 'png'];
+            var extension = files[0].name.split('.').pop().toLowerCase(),  //file extension from input file
+                isSuccess = fileTypes.indexOf(extension) > -1;  //is extension in acceptable types
+
+            if (isSuccess) {
+                this.readFileOrig(files[0]);
+            }
+            else {
+                alert('It is not a picture. Please, use a picture')
+            }
+            event.preventDefault()
         },
-        deletePicture: function (event, keyGallery, keyPicture)
+        readFileOrig: function (file) {
+            var self = this;
+            var reader = new FileReader();
+            reader.onloadend = function () {
+                self.pictures.original = reader.result;
+            };
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        },
+        deletePicture: function (event, keyPicture)
+        {
+            this.pictures.containers[keyPicture].base64Picture = "";
+            this.pictures.containers[keyPicture].bytes = null;
+        },
+        deletePictureOrig: function (event)
         {
             event.preventDefault();
-            this.$set('galleries[' + keyGallery + '][\'pictures\'][' + keyPicture + ']', []);
+            this.pictures.original = "";
         }
     }
 })

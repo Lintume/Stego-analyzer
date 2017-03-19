@@ -9,33 +9,35 @@ class PixelController extends Controller
 {
     public function index()
     {
-        $originalSrc = asset('images/original/originalCat.png');
-        $crypto['LSB']['images']['1000'] = asset('images/crypto/LSB1000.png');
-        $crypto['LSB']['images']['7000'] = asset('images/crypto/LSB7000.png');
-        $crypto['LSB']['images']['15000'] = asset('images/crypto/LSB15000.png');
-        $crypto['LSB']['images']['94000'] = asset('images/crypto/LSB94000.png');
+//        $originalSrc = asset('images/original/originalCat.png');
+//        $crypto['LSB']['images']['1000'] = asset('images/crypto/LSB1000.png');
+//        $crypto['LSB']['images']['7000'] = asset('images/crypto/LSB7000.png');
+//        $crypto['LSB']['images']['15000'] = asset('images/crypto/LSB15000.png');
+//        $crypto['LSB']['images']['94000'] = asset('images/crypto/LSB94000.png');
+//
+//        $crypto['LSB']['IF'][1000] = $this->calculateIf($originalSrc, $crypto['LSB']['images']['1000']);
+//        $crypto['LSB']['IF'][7000] = $this->calculateIf($originalSrc, $crypto['LSB']['images']['7000']);
+//        $crypto['LSB']['IF'][15000] = $this->calculateIf($originalSrc, $crypto['LSB']['images']['15000']);
+//        $crypto['LSB']['IF'][94000] = $this->calculateIf($originalSrc, $crypto['LSB']['images']['94000']);
+//
+//        $crypto['LSB']['SNR'][1000] = $this->calculateSnr($originalSrc, $crypto['LSB']['images']['1000']);
+//        $crypto['LSB']['SNR'][7000] = $this->calculateSnr($originalSrc, $crypto['LSB']['images']['7000']);
+//        $crypto['LSB']['SNR'][15000] = $this->calculateSnr($originalSrc, $crypto['LSB']['images']['15000']);
+//        $crypto['LSB']['SNR'][94000] = $this->calculateSnr($originalSrc, $crypto['LSB']['images']['94000']);
+//
+//        $crypto['LSB']['NC'][1000] = $this->calculateNc($originalSrc, $crypto['LSB']['images']['1000']);
+//        $crypto['LSB']['NC'][7000] = $this->calculateNc($originalSrc, $crypto['LSB']['images']['7000']);
+//        $crypto['LSB']['NC'][15000] = $this->calculateNc($originalSrc, $crypto['LSB']['images']['15000']);
+//        $crypto['LSB']['NC'][94000] = $this->calculateNc($originalSrc, $crypto['LSB']['images']['94000']);
+//
+//        $crypto['LSB']['NAD'][1000] = $this->calculateNad($originalSrc, $crypto['LSB']['images']['1000']);
+//        $crypto['LSB']['NAD'][7000] = $this->calculateNad($originalSrc, $crypto['LSB']['images']['7000']);
+//        $crypto['LSB']['NAD'][15000] = $this->calculateNad($originalSrc, $crypto['LSB']['images']['15000']);
+//        $crypto['LSB']['NAD'][94000] = $this->calculateNad($originalSrc, $crypto['LSB']['images']['94000']);
 
-        $crypto['LSB']['IF'][1000] = $this->calculateIf($originalSrc, $crypto['LSB']['images']['1000']);
-        $crypto['LSB']['IF'][7000] = $this->calculateIf($originalSrc, $crypto['LSB']['images']['7000']);
-        $crypto['LSB']['IF'][15000] = $this->calculateIf($originalSrc, $crypto['LSB']['images']['15000']);
-        $crypto['LSB']['IF'][94000] = $this->calculateIf($originalSrc, $crypto['LSB']['images']['94000']);
-
-        $crypto['LSB']['SNR'][1000] = $this->calculateSnr($originalSrc, $crypto['LSB']['images']['1000']);
-        $crypto['LSB']['SNR'][7000] = $this->calculateSnr($originalSrc, $crypto['LSB']['images']['7000']);
-        $crypto['LSB']['SNR'][15000] = $this->calculateSnr($originalSrc, $crypto['LSB']['images']['15000']);
-        $crypto['LSB']['SNR'][94000] = $this->calculateSnr($originalSrc, $crypto['LSB']['images']['94000']);
-
-        $crypto['LSB']['NC'][1000] = $this->calculateNc($originalSrc, $crypto['LSB']['images']['1000']);
-        $crypto['LSB']['NC'][7000] = $this->calculateNc($originalSrc, $crypto['LSB']['images']['7000']);
-        $crypto['LSB']['NC'][15000] = $this->calculateNc($originalSrc, $crypto['LSB']['images']['15000']);
-        $crypto['LSB']['NC'][94000] = $this->calculateNc($originalSrc, $crypto['LSB']['images']['94000']);
-
-        $crypto['LSB']['NAD'][1000] = $this->calculateNad($originalSrc, $crypto['LSB']['images']['1000']);
-        $crypto['LSB']['NAD'][7000] = $this->calculateNad($originalSrc, $crypto['LSB']['images']['7000']);
-        $crypto['LSB']['NAD'][15000] = $this->calculateNad($originalSrc, $crypto['LSB']['images']['15000']);
-        $crypto['LSB']['NAD'][94000] = $this->calculateNad($originalSrc, $crypto['LSB']['images']['94000']);
-
-        return view('stegonography', compact('originalSrc', 'crypto'));
+        return view('stegonography'
+//            compact('originalSrc', 'crypto')
+        );
     }
 
     public function calculateIf($originalSrc, $cryptoLSB1000)
