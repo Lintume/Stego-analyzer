@@ -3,6 +3,7 @@
     @parent
     <script>
         {{--var cryptoData = {!! \GuzzleHttp\json_encode($crypto) !!};--}}
+        var analyseUrl = '{{route('analyze')}}';
     </script>
     {{--<script src="{{asset('js/charts.js')}}"></script>--}}
     <script src="{{asset('js/gallery.js')}}"></script>
@@ -103,11 +104,31 @@
                         </a>
                     </div>
                 </div>
-                <div class="btn btn-success" v-on:click="copyPicture()">
-                    Add picture
+                <div class="row">
+                    <div class="col btn btn-success" v-on:click="copyPicture()">
+                        Add picture
+                    </div>
+                    <div class="col btn btn-danger" v-on:click="sendOnSever(event)">
+                        Analyze
+                    </div>
                 </div>
+            </div>
+            <div id="vue-pages-loader" v-show="loading">
+                <div id="loader"></div>
+                <br>
             </div>
         </div>
     </div>
 </div>
+
+    <style>
+        #vue-pages-loader {
+            clear: both;
+           }
+        #vue-pages-loader > div {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto;
+            background: url("/assets/img/loader.svg") no-repeat center; }
+    </style>
 @stop

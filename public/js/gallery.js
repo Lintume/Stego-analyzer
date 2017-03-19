@@ -1,7 +1,7 @@
 var Gallery = new Vue({
     el: '#gallery',
     data: {
-        message: "Dick",
+        loading: false,
         pictures: {
             original: "",
             containers: []
@@ -9,10 +9,13 @@ var Gallery = new Vue({
         picture: {
             base64Picture: "",
             bytes: null
-        }
+        },
+        methods: [],
+        analyseUrl: ""
     },
     mounted: function () {
-        this.copyPicture()
+        this.copyPicture();
+        this.analyseUrl = analyseUrl;
     },
     methods: {
         copyPicture: function () {
@@ -82,6 +85,20 @@ var Gallery = new Vue({
         {
             event.preventDefault();
             this.pictures.original = "";
+        },
+        sendOnSever: function (event) {
+            event.preventDefault()
+            if(this.loading == false) {
+                this.loading = true;
+                this.$http.post(this.analyseUrl,
+                    {
+                        'pictures': this.pictures
+                    })
+                    .then(function(response) {
+                        this.$set('methods', response.body);
+                        this.loading = false;
+                    });
+            }
         }
     }
 })
