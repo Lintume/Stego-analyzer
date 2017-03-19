@@ -25,15 +25,10 @@ class PixelController extends Controller
         $crypto['LSB']['SNR'][15000] = $this->calculateSnr($originalSrc, $crypto['LSB']['images']['15000']);
         $crypto['LSB']['SNR'][94000] = $this->calculateSnr($originalSrc, $crypto['LSB']['images']['94000']);
 
-        $crypto['LSB']['CQ'][1000] = $this->calculateCq($originalSrc, $crypto['LSB']['images']['1000']);
-        $crypto['LSB']['CQ'][7000] = $this->calculateCq($originalSrc, $crypto['LSB']['images']['7000']);
-        $crypto['LSB']['CQ'][15000] = $this->calculateCq($originalSrc, $crypto['LSB']['images']['15000']);
-        $crypto['LSB']['CQ'][94000] = $this->calculateCq($originalSrc, $crypto['LSB']['images']['94000']);
-
-        $crypto['LSB']['AD'][1000] = $this->calculateAd($originalSrc, $crypto['LSB']['images']['1000']);
-        $crypto['LSB']['AD'][7000] = $this->calculateAd($originalSrc, $crypto['LSB']['images']['7000']);
-        $crypto['LSB']['AD'][15000] = $this->calculateAd($originalSrc, $crypto['LSB']['images']['15000']);
-        $crypto['LSB']['AD'][94000] = $this->calculateAd($originalSrc, $crypto['LSB']['images']['94000']);
+        $crypto['LSB']['NC'][1000] = $this->calculateNc($originalSrc, $crypto['LSB']['images']['1000']);
+        $crypto['LSB']['NC'][7000] = $this->calculateNc($originalSrc, $crypto['LSB']['images']['7000']);
+        $crypto['LSB']['NC'][15000] = $this->calculateNc($originalSrc, $crypto['LSB']['images']['15000']);
+        $crypto['LSB']['NC'][94000] = $this->calculateNc($originalSrc, $crypto['LSB']['images']['94000']);
 
         $crypto['LSB']['NAD'][1000] = $this->calculateNad($originalSrc, $crypto['LSB']['images']['1000']);
         $crypto['LSB']['NAD'][7000] = $this->calculateNad($originalSrc, $crypto['LSB']['images']['7000']);
@@ -105,7 +100,7 @@ class PixelController extends Controller
         return $sum1 / $sum2;
     }
 
-    public function calculateCq($original, $crypto)
+    public function calculateNc($original, $crypto)
     {
         $imageOriginal = imagecreatefrompng($original);
         $imageCrypto = imagecreatefrompng($crypto);
@@ -123,36 +118,12 @@ class PixelController extends Controller
 
                 $rgbCrypto = imagecolorat($imageCrypto, $x, $y);//get index color
 
-                $sum1 += ($rgbOriginal * $rgbCrypto);
-                $sum2 += $rgbOriginal;
+                $sum1 += $rgbOriginal * $rgbCrypto;
+                $sum2 += $rgbOriginal * $rgbOriginal;
             }
         }
 
         return $sum1 / $sum2;
-    }
-
-    public function calculateAd($original, $crypto)
-    {
-        $imageOriginal = imagecreatefrompng($original);
-        $imageCrypto = imagecreatefrompng($crypto);
-
-        $x_dimension = imagesx($imageOriginal); //height
-        $y_dimension = imagesy($imageOriginal); //width
-
-        $sum1 = 0;
-
-        for ($x = 0; $x < $x_dimension; $x++) {
-            for ($y = 0; $y < $y_dimension; $y++) {
-
-                $rgbOriginal = imagecolorat($imageOriginal, $x, $y);//get index color
-
-                $rgbCrypto = imagecolorat($imageCrypto, $x, $y);//get index color
-
-                $sum1 += abs($rgbOriginal - $rgbCrypto);
-            }
-        }
-
-        return $sum1 * (1/ ($x_dimension * $y_dimension));
     }
 
     public function calculateNad($original, $crypto)
