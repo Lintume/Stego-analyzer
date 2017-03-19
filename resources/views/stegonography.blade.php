@@ -67,7 +67,7 @@
     <div id="menu1" class="tab-pane fade in active">
         <h3>Analyzer</h3>
         <div id="gallery">
-            @{{ pictures|json }}
+            {{--@{{ pictures|json }}--}}
             <div class="container">
                 <div class="row">
                     <div class="col col-sm-2" style="width: 300px">

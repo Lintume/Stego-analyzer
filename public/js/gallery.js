@@ -95,7 +95,7 @@ var Gallery = new Vue({
                         'pictures': this.pictures
                     })
                     .then(function(response) {
-                        this.$set('methods', response.body);
+                        this.$set(this, 'methods', response.body.crypto);
                         this.loading = false;
                     });
             }

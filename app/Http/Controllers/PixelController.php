@@ -52,16 +52,45 @@ class PixelController extends Controller
            {
                $data = preg_replace('/data:image\/.+;base64,/', '', $picture['base64Picture']);
                $data = base64_decode($data);
-               $crypto['IF'][$picture['bytes']] =  $this->ifAnalyze($original, $data);
-               $crypto['SNR'][$picture['bytes']] = $this->snrAnalyze($original, $data);
-               $crypto['NC'][$picture['bytes']] = $this->ncAnalyze($original, $data);
-               $crypto['NAD'][$picture['bytes']] = $this->nadAnalyze($original, $data);
+               $crypto['IF']['coefficients'][$picture['bytes']] =  $this->ifAnalyze($original, $data);
+               $crypto['SNR']['coefficients'][$picture['bytes']] = $this->snrAnalyze($original, $data);
+               $crypto['NC']['coefficients'][$picture['bytes']] = $this->ncAnalyze($original, $data);
+               $crypto['NAD']['coefficients'][$picture['bytes']] = $this->nadAnalyze($original, $data);
            }
-        }
 
-        return view('stegonography'
-//            compact('originalSrc', 'crypto')
-        );
+            foreach ($crypto as &$alg)
+            {
+                $alg['max'] = $this->max($alg);
+                $alg['min'] = $this->min($alg);
+            }
+
+            return response()->json(compact('crypto'));
+        }
+        return null;
+    }
+
+    public function max($array)
+    {
+        $max = reset($array['coefficients']);
+        foreach ($array['coefficients'] as $item) {
+            if ($item > $max)
+            {
+                $max = $item;
+            }
+        }
+        return $max;
+    }
+
+    public function min($array)
+    {
+        $min = reset($array['coefficients']);
+        foreach ($array['coefficients'] as $item) {
+            if ($item < $min)
+            {
+                $min = $item;
+            }
+        }
+        return $min;
     }
 
     public function calculateIf($originalSrc, $cryptoLSB1000)
