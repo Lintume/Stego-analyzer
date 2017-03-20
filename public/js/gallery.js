@@ -11,7 +11,8 @@ var Gallery = new Vue({
             bytes: null
         },
         methods: [],
-        analyseUrl: ""
+        analyseUrl: "",
+        errors: []
     },
     mounted: function () {
         this.copyPicture();
@@ -96,82 +97,82 @@ var Gallery = new Vue({
                         'pictures': this.pictures
                     })
                     .then(function(response) {
-                        this.$set(this, 'methods', response.body.crypto);
-                        var LSB = [];
-                        LSB.IF = [];
-                        for(var key in self.methods.IF.coefficients)
-                        {
-                            LSB.IF.push([Number(key), self.methods.IF.coefficients[key]])
+                        if(response.body.crypto) {
+                            this.$set(this, 'errors', null);
+                            this.$set(this, 'methods', response.body.crypto);
+                            var crypto = [];
+                            crypto.IF = [];
+                            for (var key in self.methods.IF.coefficients) {
+                                crypto.IF.push([Number(key), self.methods.IF.coefficients[key]])
+                            }
+
+                            crypto.SNR = [];
+                            for (var key in self.methods.SNR.coefficients) {
+                                crypto.SNR.push([Number(key), self.methods.SNR.coefficients[key]])
+                            }
+
+                            crypto.NC = [];
+                            for (var key in self.methods.NC.coefficients) {
+                                crypto.NC.push([Number(key), self.methods.NC.coefficients[key]])
+                            }
+
+                            crypto.NAD = [];
+                            for (var key in self.methods.NAD.coefficients) {
+                                crypto.NAD.push([Number(key), self.methods.NAD.coefficients[key]])
+                            }
+                            google.charts.load('current', {'packages': ['corechart']});
+                            google.charts.setOnLoadCallback(drawChart);
+                            function drawChart() {
+                                var data = google.visualization.arrayToDataTable(crypto.IF, true);
+                                var options = {
+                                    title: 'IF',
+                                    hAxis: {title: 'Bits', titleTextStyle: {color: '#333'}},
+                                    vAxis: {minValue: self.methods.IF.min, maxValue: self.methods.IF.max}
+                                };
+                                var chart = new google.visualization.AreaChart(document.getElementById('chart_divIf'));
+                                chart.draw(data, options);
+                                $("a[href='#IF']").on('shown.bs.tab', function (e) {
+                                    chart.draw(data, options);
+                                });
+
+                                var data_snr = google.visualization.arrayToDataTable(crypto.SNR, true);
+                                var options_snr = {
+                                    title: 'SNR',
+                                    hAxis: {title: 'Bits', titleTextStyle: {color: '#333'}},
+                                    vAxis: {minValue: self.methods.SNR.min, maxValue: self.methods.SNR.max}
+                                };
+                                var chart_snr = new google.visualization.AreaChart(document.getElementById('chart_div_snr'));
+                                $("a[href='#SNR']").on('shown.bs.tab', function (e) {
+                                    chart_snr.draw(data_snr, options_snr);
+                                });
+
+                                var data_nc = google.visualization.arrayToDataTable(crypto.NC, true);
+                                var options_nc = {
+                                    title: 'NC',
+                                    hAxis: {title: 'Bits', titleTextStyle: {color: '#333'}},
+                                    vAxis: {minValue: self.methods.NC.min, maxValue: self.methods.NC.max}
+                                };
+                                var chart_nc = new google.visualization.AreaChart(document.getElementById('chart_div_nc'));
+                                $("a[href='#NC']").on('shown.bs.tab', function (e) {
+                                    chart_nc.draw(data_nc, options_nc);
+                                });
+
+                                var data_nad = google.visualization.arrayToDataTable(crypto.NAD, true);
+                                var options_nad = {
+                                    title: 'NAD',
+                                    hAxis: {title: 'Bits', titleTextStyle: {color: '#333'}},
+                                    vAxis: {minValue: self.methods.NAD.min, maxValue: self.methods.NAD.max}
+                                };
+                                var chart_nad = new google.visualization.AreaChart(document.getElementById('chart_div_nad'));
+                                $("a[href='#NAD']").on('shown.bs.tab', function (e) {
+                                    chart_nad.draw(data_nad, options_nad);
+                                });
+                            }
                         }
-
-                        LSB.SNR = [];
-                        for(var key in self.methods.SNR.coefficients)
-                        {
-                            LSB.SNR.push([Number(key), self.methods.SNR.coefficients[key]])
-                        }
-
-                        LSB.NC = [];
-                        for(var key in self.methods.NC.coefficients)
-                        {
-                            LSB.NC.push([Number(key), self.methods.NC.coefficients[key]])
-                        }
-
-                        LSB.NAD = [];
-                        for(var key in self.methods.NAD.coefficients)
-                        {
-                            LSB.NAD.push([Number(key), self.methods.NAD.coefficients[key]])
-                        }
-                        google.charts.load('current', {'packages':['corechart']});
-                        google.charts.setOnLoadCallback(drawChart);
-                        function drawChart() {
-                            var data = google.visualization.arrayToDataTable(LSB.IF, true);
-                            var options = {
-                                title: 'IF',
-                                hAxis: {title: 'Bits',  titleTextStyle: {color: '#333'}},
-                                vAxis: {minValue: self.methods.IF.min, maxValue: self.methods.IF.max}
-                            };
-
-                            var chart = new google.visualization.AreaChart(document.getElementById('chart_divIf'));
-                            chart.draw(data, options);
-
-
-                            var data_snr = google.visualization.arrayToDataTable(LSB.SNR, true);
-                            var options_snr = {
-                                title: 'SNR',
-                                hAxis: {title: 'Bits',  titleTextStyle: {color: '#333'}},
-                                vAxis: {minValue: self.methods.SNR.min, maxValue: self.methods.SNR.max}
-                            };
-
-                            var chart_snr = new google.visualization.AreaChart(document.getElementById('chart_div_snr'));
-                            $("a[href='#SNR']").on('shown.bs.tab', function (e) {
-                                chart_snr.draw(data_snr, options_snr);
-                            });
-
-                            var data_nc = google.visualization.arrayToDataTable(LSB.NC, true);
-                            var options_nc = {
-                                title: 'NC',
-                                hAxis: {title: 'Bits',  titleTextStyle: {color: '#333'}},
-                                vAxis: {minValue: self.methods.NC.min, maxValue: self.methods.NC.max}
-                            };
-
-                            var chart_nc = new google.visualization.AreaChart(document.getElementById('chart_div_nc'));
-                            $("a[href='#NC']").on('shown.bs.tab', function (e) {
-                                chart_nc.draw(data_nc, options_nc);
-                            });
-
-
-                            var data_nad = google.visualization.arrayToDataTable(LSB.NAD, true);
-                            var options_nad = {
-                                title: 'NAD',
-                                hAxis: {title: 'Bits',  titleTextStyle: {color: '#333'}},
-                                vAxis: {minValue: self.methods.NAD.min, maxValue: self.methods.NAD.max}
-                            };
-
-                            var chart_nad = new google.visualization.AreaChart(document.getElementById('chart_div_nad'));
-                            $("a[href='#NAD']").on('shown.bs.tab', function (e) {
-                                chart_nad.draw(data_nad, options_nad);
-                            });
-                        }
+                        this.loading = false;
+                    }, function (response) {
+                        this.$set(this, 'errors', response.body);
+                        alert("Errors in form");
                         this.loading = false;
                     });
             }
