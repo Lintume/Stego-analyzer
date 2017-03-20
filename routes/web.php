@@ -20,7 +20,7 @@ Route::get('/vkauthorize', function () {
 });
 
 Route::get('/leaders', ['as' => 'leaders', 'uses' => 'MemberController@show']);
-Route::get('/stegonography', ['as' => 'stegonography', 'uses' => 'PixelController@index']);
+Route::get('/steganography', ['as' => 'stegonography', 'uses' => 'PixelController@index']);
 Route::post('/analyze', ['as' => 'analyze', 'uses' => 'PixelController@analyze']);
 
     Route::get('vk', function () {
