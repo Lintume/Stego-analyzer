@@ -68,9 +68,9 @@
         <h3>Analyzer</h3>
         <div id="gallery">
             {{--@{{ pictures|json }}--}}
-            <div class="container">
+            <div style="margin: 20px">
                 <div class="row">
-                    <div class="col col-sm-2" style="width: 300px">
+                    <div class="col-lg-1" style="width: 300px">
                         <label>
                             <div class="btn btn-default" v-if="pictures.original.length == 0">
                                 Download original picture
@@ -85,7 +85,7 @@
                             Delete
                         </a>
                     </div>
-                    <div class="col col-sm-2" style="width: 300px" v-for="(picture, keyPicture) in pictures.containers">
+                    <div class="col-lg-1" style="width: 300px" v-for="(picture, keyPicture) in pictures.containers">
                         <label>
                             <div class="btn btn-default" v-if="picture.base64Picture.length == 0">
                                 Download picture
@@ -116,6 +116,33 @@
             <div id="vue-pages-loader" v-show="loading">
                 <div id="loader"></div>
                 <br>
+            </div>
+            <br>
+            <div style="margin: 20px" v-if="methods.length != 0">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#IF">IF</a></li>
+                    <li><a data-toggle="tab" href="#SNR">SNR</a></li>
+                    <li><a data-toggle="tab" href="#NC">NC</a></li>
+                    <li><a data-toggle="tab" href="#NAD">NAD</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div id="IF" class="tab-pane fade in active">
+                        <h3>IF</h3>
+                        <div id="chart_divIf" style="width: 100%"></div>
+                    </div>
+                    <div id="SNR" class="tab-pane fade">
+                        <h3>SNR</h3>
+                        <div id="chart_div_snr" style="width: 100%"></div>
+                    </div>
+                    <div id="NC" class="tab-pane fade">
+                        <h3>NC</h3>
+                        <div id="chart_div_nc" style="width: 100%"></div>
+                    </div>
+                    <div id="NAD" class="tab-pane fade">
+                        <h3>NAD</h3>
+                        <div id="chart_div_nad" style="width: 100%"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
