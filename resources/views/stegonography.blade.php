@@ -1,4 +1,5 @@
 @extends('layouts.layout')
+@section('title','Steganography analyzer')
 @section('javascript')
     @parent
     <script>
