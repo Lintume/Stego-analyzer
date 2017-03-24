@@ -42,8 +42,8 @@ class MemberController extends Controller
 //            sleep(1);
 //        }
 //        $mem->update(['weight' => $countWeight]);
-
-       $members = Member::where('id_group', 120416132)->where('weight', '>', 1)->orderBy('weight', 'DESC')->take(15)->get();
+//120416132
+       $members = Member::where('id_group', 3183750)->where('weight', '>', 0)->orderBy('weight', 'DESC')->take(15)->get();
         return view('leaders', compact('members'));
     }
 }
