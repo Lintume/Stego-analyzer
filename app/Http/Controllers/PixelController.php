@@ -14,6 +14,12 @@ class PixelController extends Controller
         );
     }
 
+    public function LSB()
+    {
+        return view('lsb'
+        );
+    }
+
     public function analyze(CryptoRequest $request)
     {
         if($request->has('pictures.original') && $request->has('pictures.containers'))
@@ -89,11 +95,10 @@ class PixelController extends Controller
 //                $pixelOriginal = new Pixel($r, $g, $b);
 
                 $rgbCrypto = imagecolorat($imageCrypto, $x, $y);//get index color
-                $r = ($rgbCrypto >> 16) & 0xFF;
-                $g = ($rgbCrypto >> 8) & 0xFF;
-                $b = $rgbCrypto & 0xFF;
-
-                $pixelCrypto = new Pixel($r, $g, $b);
+//                $r = ($rgbCrypto >> 16) & 0xFF;
+//                $g = ($rgbCrypto >> 8) & 0xFF;
+//                $b = $rgbCrypto & 0xFF;
+//                $pixelCrypto = new Pixel($r, $g, $b);
 
                 $sum1 += ($rgbOriginal - $rgbCrypto) * ($rgbOriginal - $rgbCrypto);
                 $sum2 += ($rgbOriginal) * ($rgbOriginal);
@@ -101,6 +106,73 @@ class PixelController extends Controller
         }
 
         return 1 - $sum1 / $sum2;
+    }
+
+    public function LSBAnalyze(Request $request)
+    {
+        $pictures = $request->get('pictures');
+        $original = preg_replace('/data:image\/.+;base64,/', '', $pictures['original']);
+        $original = base64_decode($original);
+
+        $imageOriginal = imagecreatefromstring($original);
+
+        $x_dimension = imagesx($imageOriginal); //height
+        $y_dimension = imagesy($imageOriginal); //width
+
+        $imageCrypto = imagecreate($x_dimension, $y_dimension);
+        $binaryText = str_split($this->textBinASCII('Hello nigga'));
+        $textCount = count($binaryText);
+        $count = 0;
+
+//        $text = $this->ASCIIBinText($binaryText);
+
+        for ($x = 0; $x < $x_dimension; $x++) {
+
+            if ($count > $textCount)
+                break;
+
+            for ($y = 0; $y < $y_dimension; $y++) {
+
+                if ($count > $textCount)
+                    break;
+
+                $rgbOriginal = imagecolorat($imageOriginal, $x, $y);
+
+                $r = ($rgbOriginal >> 16) & 0xFF;
+                $g = ($rgbOriginal >> 8) & 0xFF;
+                $b = $rgbOriginal & 0xFF;
+
+                $blueBinaryArray = str_split((string)base_convert($b,10,2));
+                $blueBinaryArray[count($blueBinaryArray)-1] = $binaryText[$count];
+                $blueBinary = implode($blueBinaryArray);
+
+                $color = imagecolorallocate($imageOriginal,
+                    $r,
+                    $g,
+                    $blueBinary);
+                imagesetpixel($imageCrypto, $x, $y, $color);
+
+                $count++;
+            }
+        }
+        return response()->json(['success' => true]);
+    }
+
+    function textBinASCII($text)
+    {
+        $bin = array();
+        for($i=0; strlen($text)>$i; $i++)
+            $bin[] = decbin(ord($text[$i]));
+        return implode(' ',$bin);
+    }
+
+    function ASCIIBinText($bin)
+    {
+        $text = array();
+        $bin = explode(" ", $bin);
+        for($i=0; count($bin)>$i; $i++)
+            $text[] = chr(bindec($bin[$i]));
+        return implode($text);
     }
 
     public function snrAnalyze($original, $crypto)

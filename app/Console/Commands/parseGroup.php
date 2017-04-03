@@ -98,7 +98,6 @@ class parseGroup extends Command
             }
             $countLoops = intdiv($VKResponse->response->count, 1000) + 1;
             $countWeight = 0;
-            sleep(1);
             for($i = 0; $i < $countLoops; $i++) {
                 $friendsRes = $client->request('GET', 'https://api.vk.com/method/friends.get', ['query' => [
                     'v' => '5.9',
@@ -122,7 +121,6 @@ class parseGroup extends Command
                         }
                     }
                 }
-                sleep(1);
             }
             $mem->update(['weight' => $countWeight]);
         }
