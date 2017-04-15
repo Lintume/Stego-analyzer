@@ -120,7 +120,13 @@ class PixelController extends Controller
         $y_dimension = imagesy($imageOriginal); //width
 
         $imageCrypto = $imageOriginal;
-        $string = 'Ha';
+        $string = 'Lorem 
+        
+        ipsum dolor sit amet, consectetur adipiscing elit. Aenean tristique mi urna. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Morbi vel velit sed libero finibus volutpat at sed est. Ut iaculis lorem lacus, sed vehicula nisl fermentum quis. Nam scelerisque interdum facilisis. In fermentum, mi sit amet gravida aliquam, risus eros dapibus eros, vitae facilisis urna purus at augue. Aliquam eros urna, maximus et arcu non, mollis volutpat neque. In hac habitasse platea dictumst. Phasellus maximus scelerisque lacinia. Nunc accumsan ante non quam tincidunt rutrum. Pellentesque aliquam convallis fermentum.
+Proin arcu est, laoreet vitae orci sit amet, aliquet imperdiet nunc. Nam ut lacus et tellus laoreet ornare ut quis ex. Praesent pulvinar lacus sit amet diam fermentum, id fermentum turpis varius. Phasellus sodales metus justo, nec varius odio vulputate nec. Aenean dapibus sapien sit amet venenatis ornare. Maecenas eu enim in augue dapibus dapibus. Sed sit amet turpis auctor, scelerisque risus id, volutpat sem. Vivamus ullamcorper ornare quam ut accumsan. Curabitur varius mauris in mauris imperdiet facilisis. Nunc eu dolor nibh. In lacinia consectetur lectus eu egestas. Donec diam lorem, iaculis ac sapien quis, pulvinar tincidunt risus. Aliquam ut ex facilisis, posuere metus eu, dignissim dui. Pellentesque tempus luctus erat, sit amet vulputate sem laoreet non. Praesent molestie odio vitae sapien elementum, tempus bibendum tortor faucibus. Integer ac quam velit.
+In tristique non velit ac semper. Vivamus eu arcu pretium, sollicitudin velit sed, laoreet mauris. Nunc elementum quis diam at blandit. Pellentesque neque tortor, dapibus quis tristique vitae, rhoncus eu mi. Duis augue dolor, faucibus at augue sed, porttitor accumsan augue. Duis vitae fermentum ante, eu porta velit. Donec finibus tellus metus, eget malesuada mi luctus id. Cras mattis orci in luctus semper. Ut laoreet nisi vitae augue iaculis, ut cursus augue lacinia. Mauris rutrum sapien tellus, id pretium metus fermentum eget. Nunc eget lorem ac leo tempor rutrum. Proin mauris orci, fringilla quis erat nec, ornare tempus nisi.
+Nullam tincidunt convallis dolor id porta. Integer tempor sapien a lectus tempor pretium. Fusce ut scelerisque eros, at volutpat turpis. Sed varius arcu tincidunt urna sodales, vel malesuada massa consequat. Suspendisse facilisis luctus leo, vel viverra orci ullamcorper nec. Donec urna urna, pretium venenatis nunc nec, sodales pretium augue. Mauris congue porttitor ex vel finibus. Praesent a pharetra erat. Donec sed dictum sem. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+Sed ultricies condimentum risus, at dapibus libero tristique vitae. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nam in lacus in erat pretium feugiat euismod porttitor sapien. Etiam cursus ante et tempor iaculis. Vivamus massa urna, placerat eu diam eget, sodales laoreet ex. Mauris convallis mauris sit amet consectetur rutrum. Integer sodales euismod maximus. In augue leo, elementum in rhoncus accumsan, vehicula quis odio. Nullam non ultricies libero, a sodales purus. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras venenatis elit ut lorem interdum mattis. Etiam vitae bibendum velit. Aliquam ornare eros bibendum vulputate pretium. Aliquam elementum urna in erat dapibus, maximus laoreet diam feugiat. Donec mattis venenatis ante, a tincidunt libero placerat sit amet. Nulla ut sodales neque, et lobortis lacus.';
         $string .= '~';
         $binaryText = str_split($this->textBinASCII($string)); //string to array
         $textCount = count($binaryText);
@@ -192,33 +198,24 @@ class PixelController extends Controller
                 $b = $rgbOriginal & 0xFF;
 
                 $blueBinaryArray = str_split((string)base_convert($b, 10, 2));
-                $bit = $blueBinaryArray[count($blueBinaryArray)-1];
+                $bit = $blueBinaryArray[count($blueBinaryArray) - 1];
                 array_push($binaryString, $bit);
 
-                if ($binaryTild[$i] == $bit)
-                {
-                    $flagTild[$i] = true;
-                }
-                else
-                {
-                    $flagTild[$i] = false;
-                }
-                $flagTrueTild = true;
-                for($k = 0; $k<7; $k++)
-                {
-                    if($flagTild[$k] == false)
-                    {
-                        $flagTrueTild = false;
-                    }
-                }
+                $binaryTild[$i] == $bit ? $flagTild[$i] = true : $flagTild[$i] = false;
 
-                if($i == 6 && $flagTrueTild == true)
-                {
-                    $flagEnd = true;
-                }
-                if($flagEnd == true)
-                {
-                    break;
+                $flagTrueTild = false;
+                if ($i == 6) {
+                    $flagTrueTild = true;
+                    for ($k = 0; $k < 7; $k++) {
+                        if ($flagTild[$k] == false) {
+                            $flagTrueTild = false;
+                        }
+                    }
+
+                    if ($flagTrueTild == true) {
+                        $flagEnd = true;
+                        break;
+                    }
                 }
                 $i++;
                 if($i == 7 && $flagTrueTild == false)
@@ -250,8 +247,18 @@ class PixelController extends Controller
     function textBinASCII($text)
     {
         $bin = array();
-        for($i=0; strlen($text)>$i; $i++)
+        for($i=0; strlen($text)>$i; $i++) {
             $bin[] = decbin(ord($text[$i]));
+            if(strlen($bin[$i]) < 7)
+            {
+                $countNull = 7 - strlen($bin[$i]);
+                $stringNull = '';
+                for($j = 0; $j < $countNull; $j++) {
+                    $stringNull .= '0';
+                }
+                $bin[$i] = $stringNull.$bin[$i];
+            }
+        }
         return implode('',$bin);
     }
 
