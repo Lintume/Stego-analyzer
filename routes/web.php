@@ -27,7 +27,7 @@ Route::get('/leaders', ['as' => 'leaders', 'uses' => 'MemberController@show']);
 Route::get('/steganography', ['as' => 'stegonography', 'uses' => 'PixelController@index']);
 Route::get('/lsb', ['as' => 'lsb', 'uses' => 'PixelController@LSB']);
 Route::post('/analyze', ['as' => 'analyze', 'uses' => 'PixelController@analyze']);
-Route::post('/lsb_analyze', ['as' => 'lsb_analyze', 'uses' => 'PixelController@LSBAnalyze']);
+Route::post('/lsb_analyze', ['as' => 'lsb_analyze', 'uses' => 'PixelController@LSBAnalyzeDecode']);
 
     Route::get('vk', function () {
         $client_id = '5922811';

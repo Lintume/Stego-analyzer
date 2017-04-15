@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CryptoRequest;
 use App\Models\Pixel;
 use Illuminate\Http\Request;
+use Intervention\Image\Facades\Image;
 
 class PixelController extends Controller
 {
@@ -30,7 +31,7 @@ class PixelController extends Controller
             $crypto = [];
            foreach ($pictures['containers'] as $picture)
            {
-               $data = preg_replace('/data:image\/.+;base64,/', '', $picture['base64Picture']);
+               $data = preg_replace('/data:image\/jpeg;base64,/', '', $picture['base64Picture']);
                $data = base64_decode($data);
                $crypto['IF']['coefficients'][$picture['bytes']] =  $this->ifAnalyze($original, $data);
                $crypto['SNR']['coefficients'][$picture['bytes']] = $this->snrAnalyze($original, $data);
@@ -113,27 +114,26 @@ class PixelController extends Controller
         $pictures = $request->get('pictures');
         $original = preg_replace('/data:image\/.+;base64,/', '', $pictures['original']);
         $original = base64_decode($original);
-
         $imageOriginal = imagecreatefromstring($original);
 
         $x_dimension = imagesx($imageOriginal); //height
         $y_dimension = imagesy($imageOriginal); //width
 
-        $imageCrypto = imagecreate($x_dimension, $y_dimension);
-        $binaryText = str_split($this->textBinASCII('Hello nigga'));
+        $imageCrypto = $imageOriginal;
+        $string = 'Ha';
+        $string .= '~';
+        $binaryText = str_split($this->textBinASCII($string)); //string to array
         $textCount = count($binaryText);
         $count = 0;
 
-//        $text = $this->ASCIIBinText($binaryText);
-
         for ($x = 0; $x < $x_dimension; $x++) {
 
-            if ($count > $textCount)
+            if ($count >= $textCount)
                 break;
 
             for ($y = 0; $y < $y_dimension; $y++) {
 
-                if ($count > $textCount)
+                if ($count >= $textCount)
                     break;
 
                 $rgbOriginal = imagecolorat($imageOriginal, $x, $y);
@@ -149,13 +149,102 @@ class PixelController extends Controller
                 $color = imagecolorallocate($imageOriginal,
                     $r,
                     $g,
-                    $blueBinary);
+                    bindec($blueBinary));
                 imagesetpixel($imageCrypto, $x, $y, $color);
+                $rgb = imagecolorat($imageCrypto, $x, $y);
+                $bnew = $rgb & 0xFF;
 
                 $count++;
             }
         }
+        $imageSave = imagepng($imageCrypto,'C:\Users\User\Desktop\sdf.png');
+        imagedestroy($imageCrypto);
         return response()->json(['success' => true]);
+    }
+
+    public function LSBAnalyzeDecode(Request $request)
+    {
+        $pictures = $request->get('pictures');
+        $original = preg_replace('/data:image\/png;base64,/', '', $pictures['original']);
+        $original = base64_decode($original);
+        $imageOriginal = imagecreatefromstring($original);
+
+        $x_dimension = imagesx($imageOriginal); //height
+        $y_dimension = imagesy($imageOriginal); //width
+
+        $tild = '~';
+        $binaryTild = str_split($this->textBinASCII($tild)); //string to array
+        $flagEnd = false;
+        $flagTild = [];
+        for($i = 0; $i<7; $i++)
+        {
+            array_push($flagTild, false);
+        }
+        $binaryString = [];
+        $binaryArrayResult = [];
+        $i = 0;
+        for ($x = 0; $x < $x_dimension; $x++) {
+            
+            for ($y = 0; $y < $y_dimension; $y++) {
+
+                $rgbOriginal = imagecolorat($imageOriginal, $x, $y);
+
+                $b = $rgbOriginal & 0xFF;
+
+                $blueBinaryArray = str_split((string)base_convert($b, 10, 2));
+                $bit = $blueBinaryArray[count($blueBinaryArray)-1];
+                array_push($binaryString, $bit);
+
+                if ($binaryTild[$i] == $bit)
+                {
+                    $flagTild[$i] = true;
+                }
+                else
+                {
+                    $flagTild[$i] = false;
+                }
+                $flagTrueTild = true;
+                for($k = 0; $k<7; $k++)
+                {
+                    if($flagTild[$k] == false)
+                    {
+                        $flagTrueTild = false;
+                    }
+                }
+
+                if($i == 6 && $flagTrueTild == true)
+                {
+                    $flagEnd = true;
+                }
+                if($flagEnd == true)
+                {
+                    break;
+                }
+                $i++;
+                if($i == 7 && $flagTrueTild == false)
+                {
+                    $i = 0;
+                    array_push($binaryArrayResult, $binaryString);
+                    $binaryString = [];
+                    for($l = 0; $l<7; $l++)
+                    {
+                        $flagTild[$l] = false;
+                    }
+                }
+            }
+            if($flagEnd == true)
+            {
+                break;
+            }
+        }
+
+        $result = '';
+        for ($i = 0; $i<count($binaryArrayResult); $i++)
+        {
+            $result.=$this->ASCIIBinText(implode('', $binaryArrayResult[$i]));
+        }
+
+        return response()->json(['success' => $result]);
     }
 
     function textBinASCII($text)
@@ -163,7 +252,7 @@ class PixelController extends Controller
         $bin = array();
         for($i=0; strlen($text)>$i; $i++)
             $bin[] = decbin(ord($text[$i]));
-        return implode(' ',$bin);
+        return implode('',$bin);
     }
 
     function ASCIIBinText($bin)

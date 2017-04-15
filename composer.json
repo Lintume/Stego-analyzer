@@ -11,6 +11,7 @@
         "doctrine/dbal": "^2.5",
         "graham-campbell/exceptions": "^9.3",
         "guzzlehttp/guzzle": "^6.2",
+        "intervention/image": "^2.3",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0"
     },
