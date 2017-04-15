@@ -15,9 +15,15 @@ class PixelController extends Controller
         );
     }
 
-    public function LSB()
+    public function encodeLSB()
     {
-        return view('lsb'
+        return view('lsb_encode'
+        );
+    }
+
+    public function decodeLSB()
+    {
+        return view('lsb_decode'
         );
     }
 
@@ -31,7 +37,7 @@ class PixelController extends Controller
             $crypto = [];
            foreach ($pictures['containers'] as $picture)
            {
-               $data = preg_replace('/data:image\/jpeg;base64,/', '', $picture['base64Picture']);
+               $data = preg_replace('/data:image\/png;base64,/', '', $picture['base64Picture']);
                $data = base64_decode($data);
                $crypto['IF']['coefficients'][$picture['bytes']] =  $this->ifAnalyze($original, $data);
                $crypto['SNR']['coefficients'][$picture['bytes']] = $this->snrAnalyze($original, $data);
@@ -109,7 +115,7 @@ class PixelController extends Controller
         return 1 - $sum1 / $sum2;
     }
 
-    public function LSBAnalyze(Request $request)
+    public function LSBAnalyzeEncode(Request $request)
     {
         $pictures = $request->get('pictures');
         $original = preg_replace('/data:image\/.+;base64,/', '', $pictures['original']);
@@ -157,8 +163,6 @@ Sed ultricies condimentum risus, at dapibus libero tristique vitae. Pellentesque
                     $g,
                     bindec($blueBinary));
                 imagesetpixel($imageCrypto, $x, $y, $color);
-                $rgb = imagecolorat($imageCrypto, $x, $y);
-                $bnew = $rgb & 0xFF;
 
                 $count++;
             }

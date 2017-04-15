@@ -24,10 +24,14 @@ Route::get('/vklintu', function () {
 });
 
 Route::get('/leaders', ['as' => 'leaders', 'uses' => 'MemberController@show']);
+
 Route::get('/steganography', ['as' => 'stegonography', 'uses' => 'PixelController@index']);
-Route::get('/lsb', ['as' => 'lsb', 'uses' => 'PixelController@LSB']);
 Route::post('/analyze', ['as' => 'analyze', 'uses' => 'PixelController@analyze']);
-Route::post('/lsb_analyze', ['as' => 'lsb_analyze', 'uses' => 'PixelController@LSBAnalyzeDecode']);
+
+Route::get('/lsb_encode_view', ['as' => 'lsb', 'uses' => 'PixelController@encodeLSB']);
+Route::get('/lsb_decode_view', ['as' => 'lsb', 'uses' => 'PixelController@decodeLSB']);
+Route::post('/lsb_encode', ['as' => 'lsb_encode', 'uses' => 'PixelController@LSBAnalyzeEncode']);
+Route::post('/lsb_decode', ['as' => 'lsb_decode', 'uses' => 'PixelController@LSBAnalyzeDecode']);
 
     Route::get('vk', function () {
         $client_id = '5922811';

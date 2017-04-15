@@ -3,7 +3,7 @@
 @section('javascript')
     @parent
     <script>
-        var analyseUrl = '{{route('lsb_analyze')}}';
+        var analyseUrl = '{{route('lsb_decode')}}';
     </script>
     <script src="{{asset('js/gallery.js')}}"></script>
     @stop
