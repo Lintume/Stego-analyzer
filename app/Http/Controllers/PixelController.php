@@ -250,7 +250,7 @@ Sed ultricies condimentum risus, at dapibus libero tristique vitae. Pellentesque
             $result.=$this->ASCIIBinText(implode('', $binaryArrayResult[$i]));
         }
 
-        return response()->json(['success' => $result]);
+        return response()->json(['text' => $result]);
     }
 
     function textBinASCII($text)
