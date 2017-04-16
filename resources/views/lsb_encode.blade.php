@@ -1,5 +1,5 @@
 @extends('layouts.layout')
-@section('title','Steganography analyzer')
+@section('title','LSB encode')
 @section('javascript')
     @parent
     <script>
@@ -27,14 +27,19 @@
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6" style="width: 300px" v-for="(picture, keyPicture) in pictures.containers">
                     <label>
-                        <div class="btn btn-default" v-if="picture.base64Picture.length == 0">
-                            Download picture
-                        </div>
                         <div v-if="picture.base64Picture.length > 0">
                             <img style="max-width: 300px" v-bind:src="picture.base64Picture">
                         </div>
                         <input style="display:none" type="file">
                     </label>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-8 col-xs-6" >
+                    <textarea id="textarea" class="form-control" rows="5" v-model="text" style="max-width:100%;">
+                    </textarea>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-8 col-xs-6" >
+                    Max chars: <p style="color: red">@{{ maxlength }}</p>
+                    Your chars: <p style="color: green">@{{ lengthText }}</p>
                 </div>
             </div>
             <div class="row">
