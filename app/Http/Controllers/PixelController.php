@@ -32,17 +32,30 @@ class PixelController extends Controller
         if($request->has('pictures.original') && $request->has('pictures.containers'))
         {
             $pictures = $request->get('pictures');
-            $original = preg_replace('/data:image\/.+;base64,/', '', $pictures['original']);
+            $original = preg_replace('/data:image\/\w+;base64,/', '', $pictures['original']);
             $original = base64_decode($original);
             $crypto = [];
            foreach ($pictures['containers'] as $picture)
            {
-               $data = preg_replace('/data:image\/png;base64,/', '', $picture['base64Picture']);
+               $data = preg_replace('/data:image\/\w+;base64,/', '', $picture['base64Picture']);
+               if($data == null || $data == '')
+                   return response(404);
+
                $data = base64_decode($data);
-               $crypto['IF']['coefficients'][$picture['bytes']] =  $this->ifAnalyze($original, $data);
-               $crypto['SNR']['coefficients'][$picture['bytes']] = $this->snrAnalyze($original, $data);
-               $crypto['NC']['coefficients'][$picture['bytes']] = $this->ncAnalyze($original, $data);
-               $crypto['NAD']['coefficients'][$picture['bytes']] = $this->nadAnalyze($original, $data);
+
+               $imageOriginal = imagecreatefromstring($original);
+               $imageCrypto = imagecreatefromstring($data);
+
+               $x_dimension = imagesx($imageOriginal); //height
+               $y_dimension = imagesy($imageOriginal); //width
+
+               if($this->equals($imageOriginal, $imageCrypto, $x_dimension, $y_dimension) == 0)
+                   return response()->json(['errors' => ['Pictures are identical']], 404);
+
+               $crypto['IF']['coefficients'][$picture['bytes']] =  $this->ifAnalyze($imageOriginal, $imageCrypto, $x_dimension, $y_dimension);
+               $crypto['SNR']['coefficients'][$picture['bytes']] = $this->snrAnalyze($imageOriginal, $imageCrypto, $x_dimension, $y_dimension);
+               $crypto['NC']['coefficients'][$picture['bytes']] = $this->ncAnalyze($imageOriginal, $imageCrypto, $x_dimension, $y_dimension);
+               $crypto['NAD']['coefficients'][$picture['bytes']] = $this->nadAnalyze($imageOriginal, $imageCrypto, $x_dimension, $y_dimension);
            }
 
             foreach ($crypto as &$alg)
@@ -80,14 +93,8 @@ class PixelController extends Controller
         return $min;
     }
 
-    public function ifAnalyze($original, $container)
+    public function ifAnalyze($imageOriginal, $imageCrypto, $x_dimension, $y_dimension)
     {
-        $imageOriginal = imagecreatefromstring($original);
-        $imageCrypto = imagecreatefromstring($container);
-
-        $x_dimension = imagesx($imageOriginal); //height
-        $y_dimension = imagesy($imageOriginal); //width
-
         $sum1 = 0;
         $sum2 = 0;
 
@@ -95,11 +102,6 @@ class PixelController extends Controller
             for ($y = 0; $y < $y_dimension; $y++) {
 
                 $rgbOriginal = imagecolorat($imageOriginal, $x, $y);//get index color
-//                $r = ($rgbOriginal >> 16) & 0xFF;
-//                $g = ($rgbOriginal >> 8) & 0xFF;
-//                $b = $rgbOriginal & 0xFF;
-//
-//                $pixelOriginal = new Pixel($r, $g, $b);
 
                 $rgbCrypto = imagecolorat($imageCrypto, $x, $y);//get index color
 //                $r = ($rgbCrypto >> 16) & 0xFF;
@@ -118,7 +120,7 @@ class PixelController extends Controller
     public function LSBAnalyzeEncode(Request $request)
     {
         $pictures = $request->get('pictures');
-        $original = preg_replace('/data:image\/.+;base64,/', '', $pictures['original']);
+        $original = preg_replace('/data:image\/\w+;base64,/', '', $pictures['original']);
         $original = base64_decode($original);
         $imageOriginal = imagecreatefromstring($original);
 
@@ -158,9 +160,7 @@ Sed ultricies condimentum risus, at dapibus libero tristique vitae. Pellentesque
                 $blueBinaryArray[count($blueBinaryArray)-1] = $binaryText[$count];
                 $blueBinary = implode($blueBinaryArray);
 
-                $color = imagecolorallocate($imageOriginal,
-                    $r,
-                    $g,
+                $color = imagecolorallocate($imageOriginal, $r, $g,
                     bindec($blueBinary));
                 imagesetpixel($imageCrypto, $x, $y, $color);
 
@@ -168,14 +168,19 @@ Sed ultricies condimentum risus, at dapibus libero tristique vitae. Pellentesque
             }
         }
         $imageSave = imagepng($imageCrypto,'C:\Users\User\Desktop\sdf.png');
+        ob_start();
+        imagepng($imageCrypto);
+        $image_string = base64_encode(ob_get_contents());
+        ob_end_clean();
+        $base64 = 'data:image/png;base64,' . $image_string;
         imagedestroy($imageCrypto);
-        return response()->json(['success' => true]);
+        return response()->json(['data' => $base64]);
     }
 
     public function LSBAnalyzeDecode(Request $request)
     {
         $pictures = $request->get('pictures');
-        $original = preg_replace('/data:image\/png;base64,/', '', $pictures['original']);
+        $original = preg_replace('/data:image\/\w+;base64,/', '', $pictures['original']);
         $original = base64_decode($original);
         $imageOriginal = imagecreatefromstring($original);
 
@@ -275,14 +280,8 @@ Sed ultricies condimentum risus, at dapibus libero tristique vitae. Pellentesque
         return implode($text);
     }
 
-    public function snrAnalyze($original, $crypto)
+    public function snrAnalyze($imageOriginal, $imageCrypto, $x_dimension, $y_dimension)
     {
-        $imageOriginal = imagecreatefromstring($original);
-        $imageCrypto = imagecreatefromstring($crypto);
-
-        $x_dimension = imagesx($imageOriginal); //height
-        $y_dimension = imagesy($imageOriginal); //width
-
         $sum1 = 0;
         $sum2 = 0;
 
@@ -301,14 +300,26 @@ Sed ultricies condimentum risus, at dapibus libero tristique vitae. Pellentesque
         return $sum1 / $sum2;
     }
 
-    public function ncAnalyze($original, $crypto)
+    public function equals($imageOriginal, $imageCrypto, $x_dimension, $y_dimension)
     {
-        $imageOriginal = imagecreatefromstring($original);
-        $imageCrypto = imagecreatefromstring($crypto);
+        $sum2 = 0;
 
-        $x_dimension = imagesx($imageOriginal); //height
-        $y_dimension = imagesy($imageOriginal); //width
+        for ($x = 0; $x < $x_dimension; $x++) {
+            for ($y = 0; $y < $y_dimension; $y++) {
 
+                $rgbOriginal = imagecolorat($imageOriginal, $x, $y);//get index color
+
+                $rgbCrypto = imagecolorat($imageCrypto, $x, $y);//get index color
+
+                $sum2 += ($rgbOriginal - $rgbCrypto) * ($rgbOriginal - $rgbCrypto);
+            }
+        }
+
+        return $sum2;
+    }
+
+    public function ncAnalyze($imageOriginal, $imageCrypto, $x_dimension, $y_dimension)
+    {
         $sum1 = 0;
         $sum2 = 0;
 
@@ -327,14 +338,8 @@ Sed ultricies condimentum risus, at dapibus libero tristique vitae. Pellentesque
         return $sum1 / $sum2;
     }
 
-    public function nadAnalyze($original, $crypto)
+    public function nadAnalyze($imageOriginal, $imageCrypto, $x_dimension, $y_dimension)
     {
-        $imageOriginal = imagecreatefromstring($original);
-        $imageCrypto = imagecreatefromstring($crypto);
-
-        $x_dimension = imagesx($imageOriginal); //height
-        $y_dimension = imagesy($imageOriginal); //width
-
         $sum1 = 0;
         $sum2 = 0;
 

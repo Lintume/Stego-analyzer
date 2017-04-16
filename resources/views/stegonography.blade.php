@@ -62,6 +62,13 @@
             <br>
         </div>
         <br>
+        <div v-if="errors">
+            <ul>
+                <li v-for="error in errors">
+                    @{{ error }}
+                </li>
+            </ul>
+        </div>
         <div style="margin: 20px" v-if="methods.length != 0">
             <ul class="nav nav-tabs">
                 <li class="active"><a data-toggle="tab" href="#IF">IF</a></li>
