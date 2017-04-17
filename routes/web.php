@@ -30,7 +30,7 @@ Route::post('/analyze', ['as' => 'analyze', 'uses' => 'PixelController@analyze']
 
 Route::get('/lsb_encode_view', ['as' => 'lsb', 'uses' => 'PixelController@encodeLSB']);
 Route::get('/lsb_decode_view', ['as' => 'lsb', 'uses' => 'PixelController@decodeLSB']);
-Route::post('/lsb_encode', ['as' => 'lsb_encode', 'uses' => 'PixelController@LSBAnalyzeEncode']);
+Route::post('/lsb_encode', ['as' => 'lsb_encode', 'uses' => 'PixelController@LSBEncodeCrypt']);
 Route::post('/lsb_decode', ['as' => 'lsb_decode', 'uses' => 'PixelController@LSBAnalyzeDecode']);
 
     Route::get('vk', function () {
