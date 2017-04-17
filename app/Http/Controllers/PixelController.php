@@ -21,9 +21,21 @@ class PixelController extends Controller
         );
     }
 
+    public function encodeLSBCrypt()
+    {
+        return view('lsb_encode_crypt'
+        );
+    }
+
     public function decodeLSB()
     {
         return view('lsb_decode'
+        );
+    }
+
+    public function decodeLSBCrypt()
+    {
+        return view('lsb_decode_crypt'
         );
     }
 
@@ -289,17 +301,23 @@ class PixelController extends Controller
         $key = 'Hello';
         $imageCrypto = $imageOriginal;
         $string =  $request->get('text');
-        $stringLength = base_convert(unpack('H*', strlen($string))[1], 16, 2);
+        
         $iv = "1234567812345678";
 
-        $hexString = unpack('H*', base64_encode($string))[1];
-        $bin = base_convert($hexString, 16, 2);
-        $stringCrypto = openssl_encrypt($bin, 'AES-256-CFB', $key, OPENSSL_RAW_DATA, $iv);
-        $output = openssl_decrypt($stringCrypto, 'AES-256-CFB', $key, OPENSSL_RAW_DATA, $iv);
-        $unbin = base64_decode(pack('H*', base_convert($output, 2, 16)));
-        
+        $stringCrypto = openssl_encrypt($string, 'AES-256-CFB', $key, OPENSSL_RAW_DATA, $iv);
+        $bin = $this->textBinASCII2($stringCrypto); //string to array
 
-        $sign = base_convert(unpack('H*', 'gravitation')[1], 16, 2);
+        $stringLength = $this->textBinASCII2((string)strlen($bin));
+        $unbinStringLength = $this->ASCIIBinText2($stringLength);
+
+        
+        $unbin = $this->ASCIIBinText2($bin);
+        $output = openssl_decrypt($unbin, 'AES-256-CFB', $key, OPENSSL_RAW_DATA, $iv);
+
+
+        $sign = $this->textBinASCII2('gravitation');
+        $unbinSign = $this->ASCIIBinText2($sign);
+        
         $binaryText = str_split($stringLength.$sign.$bin); //string to array
         $textCount = count($binaryText);
         $count = 0;
@@ -331,7 +349,7 @@ class PixelController extends Controller
                 $count++;
             }
         }
-        $imageSave = imagepng($imageCrypto,'C:\Users\User\Desktop\sdf.png');
+        $imageSave = imagepng($imageCrypto,'C:\Users\User\Desktop\crypt.png');
         ob_start();
         imagepng($imageCrypto);
         $image_string = base64_encode(ob_get_contents());
@@ -484,6 +502,38 @@ class PixelController extends Controller
     }
 
     function ASCIIBinText($bin)
+    {
+        $text = array();
+        $bin = explode(" ", $bin);
+        for($i=0; count($bin)>$i; $i++)
+            $text[] = chr(bindec($bin[$i]));
+        return implode($text);
+    }
+
+    function textBinASCII2($text)
+    {
+        $bin = array();
+        $max = 0;
+        for($i=0; strlen($text)>$i; $i++) {
+            $bin[] = decbin(ord($text[$i]));
+            if(strlen($bin[$i]) < 8)
+            {
+                $countNull = 8 - strlen($bin[$i]);
+                $stringNull = '';
+                for($j = 0; $j < $countNull; $j++) {
+                    $stringNull .= '0';
+                }
+                $bin[$i] = $stringNull.$bin[$i];
+            }
+            if(strlen($bin[$i]) > 8 && strlen($bin[$i]) > $max)
+            {
+                $max = strlen($bin[$i]);
+            }
+        }
+        return implode('',$bin);
+    }
+
+    function ASCIIBinText2($bin)
     {
         $text = array();
         $bin = explode(" ", $bin);
