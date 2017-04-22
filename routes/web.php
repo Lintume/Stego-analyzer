@@ -40,6 +40,14 @@ Route::get('/lsb_offset_view', ['as' => 'lsbOffset', 'uses' => 'LSBOffsetControl
 Route::post('/lsb_offset_encode', ['as' => 'lsb_encode_offset', 'uses' => 'LSBOffsetController@LSBOffsetEncode']);
 Route::post('/lsb_offset_decode', ['as' => 'lsb_decode_offset', 'uses' => 'LSBOffsetController@LSBOffsetDecode']);
 
+Route::get('/lsb_2bits_view', ['as' => 'lsb2bits', 'uses' => 'LSB2LastBitsBlueController@show']);
+Route::post('/lsb_2bits_encode', ['as' => 'lsb_encode_2bits', 'uses' => 'LSB2LastBitsBlueController@encode']);
+Route::post('/lsb_2bits_decode', ['as' => 'lsb_decode_2bits', 'uses' => 'LSB2LastBitsBlueController@decode']);
+
+Route::get('/lsb_3channels_view', ['as' => 'lsb3channels', 'uses' => 'LSB3channelsController@show']);
+Route::post('/lsb_3channels_encode', ['as' => 'lsb_encode3channels', 'uses' => 'LSB3channelsController@encode']);
+Route::post('/lsb_3channels_decode', ['as' => 'lsb_decode3channels', 'uses' => 'LSB3channelsController@decode']);
+
     Route::get('vk', function () {
         $client_id = '5922811';
         $scope = 'status';
