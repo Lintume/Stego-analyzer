@@ -84,8 +84,10 @@
 
                 <div class="links">
                     <a href="{{route('steganography')}}">Analyze</a>
-                    <a href="{{route('lsbencode')}}">LSB</a>
+                    <a href="{{route('lsb')}}">LSB</a>
                     <a href="{{route('lsbCrypt')}}">Crypto LSB</a>
+                    <a href="{{route('lsbOffset')}}">Crypto LSB offset</a>
+                    <a href="https://github.com/Lintume/Leader-crawler">GIT</a>
                 </div>
             </div>
         </div>

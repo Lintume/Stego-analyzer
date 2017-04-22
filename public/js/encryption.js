@@ -15,6 +15,7 @@ var Gallery = new Vue({
         errors: [],
         text: "",
         password: "",
+        offset: 0,
         maxlength: 0,
         lengthText: 0
     },
@@ -63,7 +64,7 @@ var Gallery = new Vue({
             var img = new Image();
                 img.src = imgData;
                 img.onload = function () {
-                    self.maxlength = (((img.width * img.height) / 7) -7).toFixed();
+                    self.maxlength = (((img.width * img.height) / 8) -8).toFixed();
                     $("#textarea").attr('maxlength', self.maxlength);
                 }
             }, 100);
@@ -77,7 +78,8 @@ var Gallery = new Vue({
                     {
                         'pictures': this.pictures,
                         'text': this.text,
-                        'password': this.password
+                        'password': this.password,
+                        'offset': this.offset
                     })
                     .then(function(response) {
                         // debugger;
