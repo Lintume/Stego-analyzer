@@ -8,12 +8,7 @@ class LSBController extends Controller
 {
     public function encodeLSB()
     {
-        return view('lsb_encode');
-    }
-    
-    public function decodeLSB()
-    {
-        return view('lsb_decode');
+        return view('lsb');
     }
 
     public function LSBAnalyzeEncode(Request $request)

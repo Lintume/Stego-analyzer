@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CryptoRequest;
-use App\Models\Pixel;
 use Illuminate\Http\Request;
-use Intervention\Image\Facades\Image;
 
 class PixelController extends Controller
 {

@@ -8,14 +8,7 @@ class LSBCryptController extends Controller
 {
     public function encodeLSBCrypt()
     {
-        return view('lsb_encode_crypt'
-        );
-    }
-
-    public function decodeLSBCrypt()
-    {
-        return view('lsb_decode_crypt'
-        );
+        return view('lsb_crypt');
     }
 
     public function LSBEncodeCrypt(Request $request)

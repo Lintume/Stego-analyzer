@@ -1,5 +1,5 @@
 var Gallery = new Vue({
-    el: '#gallery',
+    el: '#LSBEncode',
     data: {
         loading: false,
         pictures: {
@@ -19,7 +19,7 @@ var Gallery = new Vue({
         lengthText: 0
     },
     mounted: function () {
-        this.analyseUrl = analyseUrl;
+        this.analyseUrl = analyseUrlEncode;
     },
     watch: {
         text: function (text) {

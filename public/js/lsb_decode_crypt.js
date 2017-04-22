@@ -1,5 +1,5 @@
 var Gallery = new Vue({
-    el: '#gallery',
+    el: '#LSBDecode',
     data: {
         loading: false,
         pictures: {
@@ -12,7 +12,7 @@ var Gallery = new Vue({
         password: ""
     },
     mounted: function () {
-        this.analyseUrl = analyseUrl;
+        this.analyseUrl = analyseUrlDecode;
     },
     methods: {
         onImageChange: function (event, ip) {
