@@ -25,18 +25,18 @@ Route::get('/vklintu', function () {
 
 Route::get('/leaders', ['as' => 'leaders', 'uses' => 'MemberController@show']);
 
-Route::get('/steganography', ['as' => 'stegonography', 'uses' => 'PixelController@index']);
-Route::post('/analyze', ['as' => 'analyze', 'uses' => 'PixelController@analyze']);
+Route::get('/steganography', ['as' => 'stegonography', 'uses' => 'AnalyzeController@index']);
+Route::post('/analyze', ['as' => 'analyze', 'uses' => 'AnalyzeController@analyze']);
 
-Route::get('/lsb_encode_view', ['as' => 'lsb', 'uses' => 'PixelController@encodeLSB']);
-Route::get('/lsb_decode_view', ['as' => 'lsb', 'uses' => 'PixelController@decodeLSB']);
-Route::post('/lsb_encode', ['as' => 'lsb_encode', 'uses' => 'PixelController@LSBAnalyzeEncode']);
-Route::post('/lsb_decode', ['as' => 'lsb_decode', 'uses' => 'PixelController@LSBAnalyzeDecode']);
+Route::get('/lsb_encode_view', ['as' => 'lsb', 'uses' => 'LSBController@encodeLSB']);
+Route::get('/lsb_decode_view', ['as' => 'lsb', 'uses' => 'LSBController@decodeLSB']);
+Route::post('/lsb_encode', ['as' => 'lsb_encode', 'uses' => 'LSBController@LSBAnalyzeEncode']);
+Route::post('/lsb_decode', ['as' => 'lsb_decode', 'uses' => 'LSBController@LSBAnalyzeDecode']);
 
-Route::get('/lsb_encode_crypt_view', ['as' => 'lsbCrypt', 'uses' => 'PixelController@encodeLSBCrypt']);
-Route::get('/lsb_decode_crypt_view', ['as' => 'lsbCrypt', 'uses' => 'PixelController@decodeLSBCrypt']);
-Route::post('/lsb_encode_crypt', ['as' => 'lsb_encode_crypt', 'uses' => 'PixelController@LSBEncodeCrypt']);
-Route::post('/lsb_decode_crypt', ['as' => 'lsb_decode_crypt', 'uses' => 'PixelController@LSBDecodeCrypt']);
+Route::get('/lsb_encode_crypt_view', ['as' => 'lsbCrypt', 'uses' => 'LSBCryptController@encodeLSBCrypt']);
+Route::get('/lsb_decode_crypt_view', ['as' => 'lsbCrypt', 'uses' => 'LSBCryptController@decodeLSBCrypt']);
+Route::post('/lsb_encode_crypt', ['as' => 'lsb_encode_crypt', 'uses' => 'LSBCryptController@LSBEncodeCrypt']);
+Route::post('/lsb_decode_crypt', ['as' => 'lsb_decode_crypt', 'uses' => 'LSBCryptController@LSBDecodeCrypt']);
 
     Route::get('vk', function () {
         $client_id = '5922811';
