@@ -66,7 +66,9 @@ class LSB2LastBitsBlueController extends Controller
 
                 $blueBinaryArray = str_split((string)base_convert($b,10,2));
                 $blueBinaryArray[count($blueBinaryArray)-2] = $binaryText[$count-$offset];
-                $blueBinaryArray[count($blueBinaryArray)-1] = $binaryText[$count-$offset + 1];
+                if(array_key_exists((int)($count - $offset + 1), $binaryText)) {
+                    $blueBinaryArray[count($blueBinaryArray) - 1] = $binaryText[$count - $offset + 1];
+                }
                 $blueBinary = implode($blueBinaryArray);
 
                 $color = imagecolorallocate($imageOriginal, $r, $g,
