@@ -297,7 +297,7 @@ class PixelController extends Controller
         $x_dimension = imagesx($imageOriginal); //height
         $y_dimension = imagesy($imageOriginal); //width
 
-        $key = 'Hello';
+        $key = $request->get('password');
         $imageCrypto = $imageOriginal;
         $string =  $request->get('text');
         
@@ -307,13 +307,13 @@ class PixelController extends Controller
         $bin = $this->textBinASCII2($stringCrypto); //string to array
 
         $stringLength = $this->textBinASCII2((string)strlen($bin));
-        $unbinStringLength = (int)$this->stringBinToStringChars8($stringLength);
+        //$unbinStringLength = (int)$this->stringBinToStringChars8($stringLength);
 
-        $cryptoString = $this->stringBinToStringChars8($bin);
-        $output = openssl_decrypt($cryptoString, 'AES-256-CFB', $key, OPENSSL_RAW_DATA, $iv);
+        //$cryptoString = $this->stringBinToStringChars8($bin);
+        //$output = openssl_decrypt($cryptoString, 'AES-256-CFB', $key, OPENSSL_RAW_DATA, $iv);
 
         $sign = $this->textBinASCII2('gravitation');
-        $unbinSign = $this->stringBinToStringChars8($sign);
+        //$unbinSign = $this->stringBinToStringChars8($sign);
         
         $binaryText = str_split($stringLength.$sign.$bin);
         $textCount = count($binaryText);
@@ -470,7 +470,7 @@ class PixelController extends Controller
         }
 
         $iv = "1234567812345678";
-        $key = 'Hello';
+        $key = $request->get('password');
 
         $sign = $this->textBinASCII2('gravitation');
         $lengthSign = strlen($sign);

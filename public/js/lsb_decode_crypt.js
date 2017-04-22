@@ -3,33 +3,44 @@ var Gallery = new Vue({
     data: {
         loading: false,
         pictures: {
-            original: "",
-            containers: []
-        },
-        picture: {
-            base64Picture: "",
-            bytes: null
+            original: ""
         },
         methods: [],
         analyseUrl: "",
         errors: [],
         text: "",
-        password: "",
-        maxlength: 0,
-        lengthText: 0
+        password: ""
     },
     mounted: function () {
         this.analyseUrl = analyseUrl;
     },
-    watch: {
-        text: function (text) {
-            this.lengthText = text.length
-        }
-    },
     methods: {
-        copyPicture: function () {
-            var copiedPicture = jQuery.extend(true, {}, this.picture)
-            this.pictures.containers.push(copiedPicture);
+        onImageChange: function (event, ip) {
+            var files = event.target.files || event.dataTransfer.files;
+            if (!files.length)
+                return;
+
+            var fileTypes = ['jpg', 'jpeg', 'png'];
+            var extension = files[0].name.split('.').pop().toLowerCase(),  //file extension from input file
+                isSuccess = fileTypes.indexOf(extension) > -1;  //is extension in acceptable types
+
+            if (isSuccess) {
+                this.readFile(files[0], ip);
+            }
+            else {
+                alert('It is not a picture. Please, use a picture')
+            }
+            event.preventDefault()
+        },
+        readFile: function (file, ip) {
+            var self = this;
+            var reader = new FileReader();
+            reader.onloadend = function () {
+                self.pictures.containers[ip].base64Picture = reader.result;
+            };
+            if (file) {
+                reader.readAsDataURL(file);
+            }
         },
         onImageChangeOrig: function (event) {
             var files = event.target.files || event.dataTransfer.files;
@@ -57,16 +68,6 @@ var Gallery = new Vue({
             if (file) {
                 reader.readAsDataURL(file);
             }
-            setTimeout(function(){
-            var imgData = self.pictures.original;
-
-            var img = new Image();
-                img.src = imgData;
-                img.onload = function () {
-                    self.maxlength = (((img.width * img.height) / 7) -7).toFixed();
-                    $("#textarea").attr('maxlength', self.maxlength);
-                }
-            }, 100);
         },
         sendOnSever: function (event) {
             event.preventDefault()
@@ -76,14 +77,12 @@ var Gallery = new Vue({
                 this.$http.post(this.analyseUrl,
                     {
                         'pictures': this.pictures,
-                        'text': this.text,
                         'password': this.password
                     })
                     .then(function(response) {
                         // debugger;
-                        if(response.body.data) {
-                            this.copyPicture();
-                            this.pictures.containers[0].base64Picture = response.body.data;
+                        if(response.body.text) {
+                            this.text = response.body.text;
                         }
                         this.loading = false;
                     }, function (response) {

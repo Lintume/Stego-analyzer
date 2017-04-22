@@ -1,11 +1,11 @@
 @extends('layouts.layout')
-@section('title','LSB decoder')
+@section('title','LSB crypt decoder')
 @section('javascript')
     @parent
     <script>
         var analyseUrl = '{{route('lsb_decode_crypt')}}';
     </script>
-    <script src="{{asset('js/lsb_decode.js')}}"></script>
+    <script src="{{asset('js/lsb_decode_crypt.js')}}"></script>
     @stop
 
 @section('content')
@@ -25,10 +25,15 @@
                         <input style="display:none" type="file" v-on:change="onImageChangeOrig($event)">
                     </label>
                 </div>
+                <div class="col-lg-4 col-md-4 col-sm-8 col-xs-6" >
+                    <label for="pass">Password:</label>
+                    <input id="pass" class="form-control" v-model="password">
+                </div>
             </div>
+            <br>
             <div class="row">
                 <div class="col btn btn-danger" v-on:click="sendOnSever(event)">
-                    Analyze
+                    Decode
                 </div>
             </div>
         </div>
