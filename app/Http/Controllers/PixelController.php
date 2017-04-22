@@ -294,7 +294,6 @@ class PixelController extends Controller
         $original = preg_replace('/data:image\/\w+;base64,/', '', $pictures['original']);
         $original = base64_decode($original);
         $imageOriginal = imagecreatefromstring($original);
-
         $x_dimension = imagesx($imageOriginal); //height
         $y_dimension = imagesy($imageOriginal); //width
 
@@ -308,17 +307,15 @@ class PixelController extends Controller
         $bin = $this->textBinASCII2($stringCrypto); //string to array
 
         $stringLength = $this->textBinASCII2((string)strlen($bin));
-        $unbinStringLength = $this->ASCIIBinText2($stringLength);
+        $unbinStringLength = (int)$this->stringBinToStringChars8($stringLength);
 
-        
-        $unbin = $this->ASCIIBinText2($bin);
-        $output = openssl_decrypt($unbin, 'AES-256-CFB', $key, OPENSSL_RAW_DATA, $iv);
-
+        $cryptoString = $this->stringBinToStringChars8($bin);
+        $output = openssl_decrypt($cryptoString, 'AES-256-CFB', $key, OPENSSL_RAW_DATA, $iv);
 
         $sign = $this->textBinASCII2('gravitation');
-        $unbinSign = $this->ASCIIBinText2($sign);
+        $unbinSign = $this->stringBinToStringChars8($sign);
         
-        $binaryText = str_split($stringLength.$sign.$bin); //string to array
+        $binaryText = str_split($stringLength.$sign.$bin);
         $textCount = count($binaryText);
         $count = 0;
 
@@ -357,6 +354,17 @@ class PixelController extends Controller
         $base64 = 'data:image/png;base64,' . $image_string;
         imagedestroy($imageCrypto);
         return response()->json(['data' => $base64]);
+    }
+
+    public function stringBinToStringChars8($strBin)
+    {
+        $arrayChars = str_split($strBin, 8);
+        $result = '';
+        for ($i = 0; $i<count($arrayChars); $i++)
+        {
+            $result.=$this->ASCIIBinText($arrayChars[$i]);
+        }
+        return $result;
     }
 
     public function LSBAnalyzeDecode(Request $request)
@@ -445,21 +453,6 @@ class PixelController extends Controller
         $x_dimension = imagesx($imageOriginal); //height
         $y_dimension = imagesy($imageOriginal); //width
 
-//        $key = 'Hello';
-//        $imageCrypto = $imageOriginal;
-//        $string =  $request->get('text');
-//        $stringLength = base_convert(unpack('H*', strlen($string))[1], 16, 2);
-//        $iv = "1234567812345678";
-//
-//        $string = openssl_encrypt ($string, 'AES-256-CFB', $key, OPENSSL_RAW_DATA, $iv);
-//        $bin = base_convert(unpack('H*', $string)[1], 16, 2);
-//        $unbin = pack('H*', base_convert($bin, 2, 16));
-//        $output = openssl_decrypt($unbin, 'AES-256-CFB', $key, OPENSSL_RAW_DATA, $iv);
-//
-//        $sign = base_convert(unpack('H*', 'gravitation')[1], 16, 2);
-//        $binaryText = str_split($stringLength.$sign.$bin); //string to array
-
-       
         $binaryString = '';
         
         for ($x = 0; $x < $x_dimension; $x++) {
@@ -475,12 +468,22 @@ class PixelController extends Controller
                 $binaryString .= $bit;
             }
         }
-        $sign = base_convert(unpack('H*', 'gravitation')[1], 16, 2);
-        $pos = strpos($binaryString, $sign);
-        $length = pack('H*', substr($binaryString, 0, $pos), 2, 16);
-        
 
-        return response()->json(['text' => $result]);
+        $iv = "1234567812345678";
+        $key = 'Hello';
+
+        $sign = $this->textBinASCII2('gravitation');
+        $lengthSign = strlen($sign);
+        $position = strpos($binaryString, $sign);
+        $lengthBinData = mb_substr($binaryString, 0, $position);
+        $lengthData = $this->stringBinToStringChars8($lengthBinData);
+        $positionData = $position + $lengthSign;
+        $binaryData = mb_substr($binaryString, $positionData, $lengthData);
+
+        $cryptoString = $this->stringBinToStringChars8($binaryData);
+        $output = openssl_decrypt($cryptoString, 'AES-256-CFB', $key, OPENSSL_RAW_DATA, $iv);
+
+        return response()->json(['text' => $output]);
     }
 
     function textBinASCII($text)
