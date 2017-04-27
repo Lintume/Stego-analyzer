@@ -64,7 +64,7 @@ var Gallery = new Vue({
             var img = new Image();
                 img.src = imgData;
                 img.onload = function () {
-                    self.maxlength = ((((img.width * img.height) / 8) -8)*2).toFixed();
+                    self.maxlength = ((((img.width * img.height) / 8) -8)*3).toFixed();
                     $("#textarea").attr('maxlength', self.maxlength);
                 }
             }, 100);

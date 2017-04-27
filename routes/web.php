@@ -48,6 +48,8 @@ Route::get('/lsb_3channels_view', ['as' => 'lsb3channels', 'uses' => 'LSB3channe
 Route::post('/lsb_3channels_encode', ['as' => 'lsb_encode3channels', 'uses' => 'LSB3channelsController@encode']);
 Route::post('/lsb_3channels_decode', ['as' => 'lsb_decode3channels', 'uses' => 'LSB3channelsController@decode']);
 
+Route::post('/rand', ['as' => 'rand', 'uses' => 'randomController@rand']);
+
     Route::get('vk', function () {
         $client_id = '5922811';
         $scope = 'status';
