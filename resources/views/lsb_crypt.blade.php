@@ -19,6 +19,9 @@
         <div id="encode" class="tab-pane fade in active">
             <div style="margin: 20px">
                 <h3>LSB encode</h3>
+                <p>
+                    LSB алгоритм, встраивание происходит в последний бит синего канала RGB, информация шифруется при помощи AES 256
+                </p>
                 <div id="LSBEncode">
                     <div style="margin: 20px">
                         <div class="row">
@@ -56,8 +59,13 @@
                             <input id="pass" class="form-control" v-model="password">
                         </div>
                         <div class="row">
+                            <div class="col">
+                                Time until encode finishing: @{{ seconds }} seconds
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col btn btn-danger" v-on:click="sendOnSever(event)">
-                                Decode
+                                Encode
                             </div>
                         </div>
                     </div>
@@ -92,6 +100,11 @@
                             </div>
                         </div>
                         <br>
+                        <div class="row">
+                            <div class="col">
+                                Time until decode finishing: @{{ seconds }} seconds
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col btn btn-danger" v-on:click="sendOnSever(event)">
                                 Decode

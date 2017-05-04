@@ -118,7 +118,7 @@ class AnalyzeController extends Controller
             }
         }
 
-        return $sum1 / $sum2;
+        return 10 * log10($sum1 / $sum2);
     }
 
     public function equals($imageOriginal, $imageCrypto, $x_dimension, $y_dimension)

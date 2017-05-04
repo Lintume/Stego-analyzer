@@ -17,7 +17,8 @@ var Gallery = new Vue({
         password: "",
         offset: 0,
         maxlength: 0,
-        lengthText: 0
+        lengthText: 0,
+        seconds: 0
     },
     mounted: function () {
         this.analyseUrl = analyseUrlEncode;
@@ -70,6 +71,7 @@ var Gallery = new Vue({
             }, 100);
         },
         sendOnSever: function (event) {
+            var timerStart = Date.now();
             event.preventDefault()
             var self = this;
             if(this.loading == false) {
@@ -87,6 +89,7 @@ var Gallery = new Vue({
                             this.copyPicture();
                             this.pictures.containers[0].base64Picture = response.body.data;
                         }
+                        this.seconds = (Date.now()-timerStart)/1000;
                         this.loading = false;
                     }, function (response) {
                         this.$set(this, 'errors', response.body);

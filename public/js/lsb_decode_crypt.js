@@ -9,7 +9,8 @@ var Gallery = new Vue({
         analyseUrl: "",
         errors: [],
         text: "",
-        password: ""
+        password: "",
+        seconds: 0
     },
     mounted: function () {
         this.analyseUrl = analyseUrlDecode;
@@ -70,6 +71,7 @@ var Gallery = new Vue({
             }
         },
         sendOnSever: function (event) {
+            var timerStart = Date.now();
             event.preventDefault()
             var self = this;
             if(this.loading == false) {
@@ -80,6 +82,7 @@ var Gallery = new Vue({
                         'password': this.password
                     })
                     .then(function(response) {
+                        this.seconds = (Date.now()-timerStart)/1000;
                         // debugger;
                         if(response.body.text) {
                             this.text = response.body.text;

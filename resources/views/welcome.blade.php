@@ -93,7 +93,6 @@
                     <a href="{{route('lsbOffset')}}">Crypto LSB offset</a>
                     <a href="{{route('lsb2bits')}}">Crypto LSB 2 bits</a>
                     <a href="{{route('lsb3channels')}}">Crypto LSB 3 channels</a>
-                    <a href="">Crypto LSB interval</a>
                 </div>
             </div>
         </div>

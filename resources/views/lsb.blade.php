@@ -19,6 +19,9 @@
         <div id="encode" class="tab-pane fade in active">
             <div style="margin: 20px">
                 <h3>LSB encode</h3>
+                <p>
+                    Простейшая реализация LSB алгоритма, встраивание происходит в последний бит синего канала RGB
+                </p>
                 <div id="LSBEncode">
                     <div style="margin: 20px">
                         <div class="row">
@@ -51,8 +54,13 @@
                             </div>
                         </div>
                         <div class="row">
+                            <div class="col">
+                                Time until encode finishing: @{{ seconds }} seconds
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col btn btn-danger" v-on:click="sendOnSever(event)">
-                                Decode
+                                Encode
                             </div>
                         </div>
                     </div>
@@ -83,8 +91,13 @@
                             </div>
                         </div>
                         <div class="row">
+                            <div class="col">
+                                Time until decode finishing: @{{ seconds }} seconds
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col btn btn-danger" v-on:click="sendOnSever(event)">
-                                Analyze
+                                Decode
                             </div>
                         </div>
                     </div>

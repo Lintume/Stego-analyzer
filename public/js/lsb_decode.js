@@ -8,7 +8,8 @@ var Gallery = new Vue({
         methods: [],
         analyseUrl: "",
         errors: [],
-        text: ""
+        text: "",
+        seconds: 0
     },
     mounted: function () {
         this.analyseUrl = analyseUrlDecode;
@@ -69,6 +70,7 @@ var Gallery = new Vue({
             }
         },
         sendOnSever: function (event) {
+            var timerStart = Date.now();
             event.preventDefault()
             var self = this;
             if(this.loading == false) {
@@ -78,6 +80,7 @@ var Gallery = new Vue({
                         'pictures': this.pictures
                     })
                     .then(function(response) {
+                        this.seconds = (Date.now()-timerStart)/1000;
                         // debugger;
                         if(response.body.text) {
                             this.text = response.body.text;
