@@ -27,6 +27,7 @@ class LSB3channelsController extends Controller
 
         $imageCrypto = $imageOriginal;
         $string =  $request->get('text');
+        $stringCount = strlen($string);
 
         $iv = "1234567812345678";
 
@@ -90,7 +91,7 @@ class LSB3channelsController extends Controller
                 $count+=3;
             }
         }
-        $imageSave = imagepng($imageCrypto,'C:\Users\User\Desktop\3channels.png');
+        $imageSave = imagepng($imageCrypto,'C:\Users\User\Desktop\3channels\3channels-'.$stringCount.'.png');
         ob_start();
         imagepng($imageCrypto);
         $image_string = base64_encode(ob_get_contents());

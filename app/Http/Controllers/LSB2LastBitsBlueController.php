@@ -27,6 +27,7 @@ class LSB2LastBitsBlueController extends Controller
 
         $imageCrypto = $imageOriginal;
         $string =  $request->get('text');
+        $stringCount = strlen($string);
 
         $iv = "1234567812345678";
 
@@ -78,7 +79,7 @@ class LSB2LastBitsBlueController extends Controller
                 $count+=2;
             }
         }
-        $imageSave = imagepng($imageCrypto,'C:\Users\User\Desktop\2bits.png');
+        $imageSave = imagepng($imageCrypto,'C:\Users\User\Desktop\2bit\2bit-'.$stringCount.'.png');
         ob_start();
         imagepng($imageCrypto);
         $image_string = base64_encode(ob_get_contents());

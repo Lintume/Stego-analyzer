@@ -27,6 +27,7 @@ class LSBOffsetController extends Controller
 
         $imageCrypto = $imageOriginal;
         $string =  $request->get('text');
+        $stringCount = strlen($string);
 
         $iv = "1234567812345678";
 
@@ -75,7 +76,7 @@ class LSBOffsetController extends Controller
                 $count++;
             }
         }
-        $imageSave = imagepng($imageCrypto,'C:\Users\User\Desktop\offset.png');
+        $imageSave = imagepng($imageCrypto,'C:\Users\User\Desktop\offset\offset-'.$stringCount.'.png');
         ob_start();
         imagepng($imageCrypto);
         $image_string = base64_encode(ob_get_contents());
@@ -136,7 +137,7 @@ class LSBOffsetController extends Controller
         $cryptoString = $this->stringBinToStringChars8($binaryData);
         $output = openssl_decrypt($cryptoString, 'AES-256-CFB', $key, OPENSSL_RAW_DATA, $iv);
 
-        return response()->json(['text' => $output]);
+        return response()->json(['text' => utf8_encode($output)]);
     }
 
     public function stringBinToStringChars8($strBin)
