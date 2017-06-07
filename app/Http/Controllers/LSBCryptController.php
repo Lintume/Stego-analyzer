@@ -70,7 +70,7 @@ class LSBCryptController extends Controller
                 $count++;
             }
         }
-        $imageSave = imagepng($imageCrypto,'C:\Users\User\Desktop\aes\aes-'.$stringCount.'.png');
+        //$imageSave = imagepng($imageCrypto,'C:\Users\User\Desktop\aes\aes-'.$stringCount.'.png');
         ob_start();
         imagepng($imageCrypto);
         $image_string = base64_encode(ob_get_contents());

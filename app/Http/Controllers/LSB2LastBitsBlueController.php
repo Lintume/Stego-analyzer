@@ -79,7 +79,7 @@ class LSB2LastBitsBlueController extends Controller
                 $count+=2;
             }
         }
-        $imageSave = imagepng($imageCrypto,'C:\Users\User\Desktop\2bit\2bit-'.$stringCount.'.png');
+        //$imageSave = imagepng($imageCrypto,'C:\Users\User\Desktop\2bit\2bit-'.$stringCount.'.png');
         ob_start();
         imagepng($imageCrypto);
         $image_string = base64_encode(ob_get_contents());
