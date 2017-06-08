@@ -9,51 +9,66 @@
     @stop
 
 @section('content')
-<div style="margin: 20px">
+<div class="container">
     <h3>Steganography Analyzer</h3>
     <div id="gallery">
-        <div style="margin: 20px">
+        <div>
             <div class="row">
-                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6" style="width: 300px">
-                    <label>
-                        <div class="btn btn-default" v-if="pictures.original.length == 0">
-                            Download original picture
+                <div class="col-lg-3">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Original picture
+                            <a style="margin-left: 8px" v-if="pictures.original.length != 0" href="#" v-on:click="deletePictureOrig($event)">
+                                <span class="label label-default">Delete</span>
+                            </a>
                         </div>
-                        <div v-if="pictures.original.length > 0">
-                            <img style="max-width: 300px" v-bind:src="pictures.original">
+                        <div class="panel-body">
+                            <label>
+                                <div class="btn btn-default" v-if="pictures.original.length == 0">
+                                    Upload
+                                </div>
+                                <div v-if="pictures.original.length > 0">
+                                    <div class="thumbnail">
+                                        <img v-bind:src="pictures.original">
+                                    </div>
+                                </div>
+                                <input style="display:none" type="file" v-on:change="onImageChangeOrig($event)">
+                            </label>
+                            <br><br>
+                                <div class="col btn btn-success" v-on:click="copyPicture()">
+                                    Add picture
+                                </div>
+                                <div class="col btn btn-danger" v-on:click="sendOnSever(event)">
+                                    Analyze
+                                </div>
+
                         </div>
-                        <input style="display:none" type="file" v-on:change="onImageChangeOrig($event)">
-                        <label>Original picture</label>
-                    </label>
-                    <a v-if="pictures.original.length != 0" href="#" v-on:click="deletePictureOrig($event)">
-                        Delete
-                    </a>
+                    </div>
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6" style="width: 300px" v-for="(picture, keyPicture) in pictures.containers">
-                    <label>
-                        <div class="btn btn-default" v-if="picture.base64Picture.length == 0">
-                            Download picture
+                <div class="col-lg-3" v-for="(picture, keyPicture) in pictures.containers">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Crypted picture
+                            <a style="margin-left: 8px" v-if="picture.base64Picture.length != 0" href="#" v-on:click="deletePicture($event, keyPicture)">
+                                <span class="label label-default">Delete</span>
+                            </a>
                         </div>
-                        <div v-if="picture.base64Picture.length > 0">
-                            <img style="max-width: 300px" v-bind:src="picture.base64Picture">
+                        <div class="panel-body">
+                            <label>
+                                <div class="btn btn-default" v-if="picture.base64Picture.length == 0">
+                                    Download picture
+                                </div>
+                                <div v-if="picture.base64Picture.length > 0">
+                                    <div class="thumbnail">
+                                        <img v-bind:src="picture.base64Picture">
+                                    </div>
+                                </div>
+                                <input style="display:none" type="file" v-on:change="onImageChange($event, keyPicture)">
+                                <div class="form-group">
+                                    <label for="bytes">Number bytes:</label>
+                                    <input v-model="picture.bytes" type="text" class="form-control" id="bytes">
+                                </div>
+                            </label>
                         </div>
-                        <input style="display:none" type="file" v-on:change="onImageChange($event, keyPicture)">
-                        <div class="form-group">
-                            <label for="bytes">Number bytes:</label>
-                            <input v-model="picture.bytes" type="text" class="form-control" id="bytes">
-                        </div>
-                    </label>
-                    <a v-if="picture.base64Picture.length != 0" href="#" v-on:click="deletePicture($event, keyPicture)">
-                        Delete
-                    </a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col btn btn-success" v-on:click="copyPicture()">
-                    Add picture
-                </div>
-                <div class="col btn btn-danger" v-on:click="sendOnSever(event)">
-                    Analyze
+                    </div>
                 </div>
             </div>
         </div>
@@ -69,7 +84,7 @@
                 </li>
             </ul>
         </div>
-        <div style="margin: 20px" v-if="methods.length != 0">
+        <div v-if="methods.length != 0">
             <ul class="nav nav-tabs">
                 <li class="active"><a data-toggle="tab" href="#IF">IF</a></li>
                 <li><a data-toggle="tab" href="#SNR">SNR</a></li>
