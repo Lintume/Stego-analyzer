@@ -1,7 +1,7 @@
-var Gallery = new Vue({
+var GalleryEncode = new Vue({
     el: '#LSBEncode',
     data: {
-        loading: false,
+        loadingEncode: false,
         pictures: {
             original: "",
             containers: []
@@ -74,8 +74,8 @@ var Gallery = new Vue({
             var timerStart = Date.now();
             event.preventDefault()
             var self = this;
-            if(this.loading == false) {
-                this.loading = true;
+            if(this.loadingEncode == false) {
+                this.loadingEncode = true;
                 this.$http.post(this.analyseUrl,
                     {
                         'pictures': this.pictures,
@@ -89,12 +89,12 @@ var Gallery = new Vue({
                             this.copyPicture();
                             this.pictures.containers[0].base64Picture = response.body.data;
                         }
-                        this.loading = false;
+                        this.loadingEncode = false;
                         this.seconds = (Date.now()-timerStart)/1000;
                     }, function (response) {
                         this.$set(this, 'errors', response.body);
                         alert("Errors in form");
-                        this.loading = false;
+                        this.loadingEncode = false;
                     });
             }
         }
