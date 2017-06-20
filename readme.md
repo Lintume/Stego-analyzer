@@ -2,7 +2,7 @@
 
 ## About
 
-Algorithmic search employees from leaders of social groups.
+Steganography coder/decoder and analyzer
 
 ## System Requirements
 
