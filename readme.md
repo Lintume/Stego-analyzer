@@ -15,7 +15,7 @@ PHP >= 5.6.4 OpenSSL PHP Extension PDO PHP Extension Mbstring PHP Extension Toke
 Please check the system requirements before installing project
 
 You may install by cloning from github
-Github: git clone https://github.com/Lintume/Leader-crawler
+Github: git clone https://github.com/Lintume/Stego-analyzer
 Enter your database details into app/config/database.php.
 Run the command composer install
 For creating tables in data base run the command
